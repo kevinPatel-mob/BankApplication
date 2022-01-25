@@ -6,6 +6,7 @@ import com.mob.casestudy.digitalbanking.enums.CustomerStatus;
 import com.mob.casestudy.digitalbanking.enums.Language;
 import com.mob.casestudy.digitalbanking.exceptionResponse.*;
 import com.mob.casestudy.digitalbanking.repository.CustomerRepository;
+import com.mob.casestudy.digitalbanking.validator.CustomerDetailValidation;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,86 +29,75 @@ class CustomerServiceTest {
     CustomisedExceptionHandler customisedExceptionHandler;
     @Mock
     CustomerRepository customerRepository;
+    @Mock
+    CustomerDetailValidation customerDetailValidation;
 
 
     @Test
-    void validateUserNameAndReturnCustomer_If_FieldAre_Not_Inserted_ThenReturn_MandatoryFieldException()
-    {
-
-      //  CustomerDto customerDto=new CustomerDto();
-        String userName="";
-        Assertions.assertThrows(MandatoryFieldException.class,
-            ()->customerService.validateUserNameAndReturnCustomer(userName,null));
-    }
-
-    @Test
-    void validateUserNameAndReturnCustomer_If_Customer_Result_IsEmpty(){
-        CustomerDto customerDto=new CustomerDto();
-        String userName="kevin";
-        Mockito.when(customerRepository.findByUserName(userName)).thenReturn(Optional.empty());
-
-        Assertions.assertThrows(UserNotFoundException.class,
-                ()->customerService.validateUserNameAndReturnCustomer(userName, customerDto));
-    }
-
-    @Test
-    void validateUserNameAndReturnCustomer_If_Customer_PhoneNumber_Is_Invalid_Throw_InvalidPhoneException(){
-
-        String userName="kevin";
-        Customer customer=Customer.builder().userName("kep")
-                .firstName("kevin").lastName("patel")
-                .phoneNumber("966484759").email("kevinpatel1142@gmail.com")
-                .status(CustomerStatus.ACTIVE).preferredLanguage(Language.EN.toString())
-                .externalId("1").createdBy("self").createdOn(LocalDateTime.now())
-                .updatedBy("k-win").updatedOn(LocalDateTime.now()).build();
-
-
-        CustomerDto customerDto = customer.toDto();
-
-        Mockito.when(customerRepository.findByUserName(userName)).thenReturn(Optional.of(customer));
-        Assertions.assertThrows(InvalidPhoneNumberException.class,
-                ()->customerService.validateUserNameAndReturnCustomer(userName,customerDto));
-
-    }
-    @Test
-    void validateUserNameAndReturnCustomer_If_Customer_Email_Is_Invalid_Throw_InvalidEmailException(){
-        String userName="kevin";
-        Customer customer=Customer.builder().userName("kep")
-                .firstName("kevin").lastName("patel")
-                .phoneNumber("9664847593").email("kevinpatel1142gmail.com")
-                .status(CustomerStatus.ACTIVE).preferredLanguage(Language.EN.toString())
-                .externalId("1").createdBy("self").createdOn(LocalDateTime.now())
-                .updatedBy("k-win").updatedOn(LocalDateTime.now()).build();
-
-        CustomerDto customerDto = customer.toDto();
-
-        Mockito.when(customerRepository.findByUserName(userName)).thenReturn(Optional.of(customer));
-        Assertions.assertThrows(InvalidEmailException.class,
-                ()->customerService.validateUserNameAndReturnCustomer(userName,customerDto));
-
-
-    }
-
-    @Test
-    void validateUserNameAndReturnCustomer_If_Customer_Language_Is_Invalid_Throw_InvalidLanguageException(){
-        String userName="kevin";
+    void updateCustomer_Return_Nothing(){
+        String userName="kep";
         Customer customer=Customer.builder().userName("kep")
                 .firstName("kevin").lastName("patel")
                 .phoneNumber("9664847593").email("kevinpatel1142@gmail.com")
-                .status(CustomerStatus.ACTIVE).preferredLanguage("E")
+                .status(CustomerStatus.ACTIVE).preferredLanguage("EN")
                 .externalId("1").createdBy("self").createdOn(LocalDateTime.now())
                 .updatedBy("k-win").updatedOn(LocalDateTime.now()).build();
-
-
         CustomerDto customerDto = customer.toDto();
+
         Mockito.when(customerRepository.findByUserName(userName)).thenReturn(Optional.of(customer));
-        Assertions.assertThrows(InvalidLanguageException.class,
-                ()->customerService.validateUserNameAndReturnCustomer(userName,customerDto));
+        customerService.updateCustomer(userName,customerDto);
+
+        Mockito.verify(customerRepository).save(customer);
     }
 
     @Test
-    void ValidateUserNameAndReturnCustomer_If_All_Validation_Is_True(){
-        String userName="kevin";
+    void validateCustomer_If_Customer_Is_Available(){
+        String userName="kep";
+        Customer customer=Customer.builder().userName("kep")
+                .firstName("kevin").lastName("patel")
+                .phoneNumber("9664847593").email("kevinpatel1142@gmail.com")
+                .status(CustomerStatus.ACTIVE).preferredLanguage("EN")
+                .externalId("1").createdBy("self").createdOn(LocalDateTime.now())
+                .updatedBy("k-win").updatedOn(LocalDateTime.now()).build();
+
+        Mockito.when(customerRepository.findByUserName(userName)).thenReturn(Optional.of(customer));
+        Customer expectedResult = customerService.validateCustomer(userName);
+        Assertions.assertEquals(expectedResult,customer);
+    }
+    @Test
+    void validateCustomer_If_Customer_Is_Not_Available_Throw_UserNotFoundException(){
+        String userName="kep";
+        Customer customer=Customer.builder().userName("kep")
+                .firstName("kevin").lastName("patel")
+                .phoneNumber("9664847593").email("kevinpatel1142@gmail.com")
+                .status(CustomerStatus.ACTIVE).preferredLanguage("EN")
+                .externalId("1").createdBy("self").createdOn(LocalDateTime.now())
+                .updatedBy("k-win").updatedOn(LocalDateTime.now()).build();
+
+        Mockito.when(customerRepository.findByUserName(userName)).thenReturn(Optional.empty());
+        Assertions.assertThrows(UserNotFoundException.class,
+                ()->customerService.validateCustomer(userName));
+    }
+
+    @Test
+    void mapToEntity(){
+        Customer customer=Customer.builder().userName("kep")
+                .firstName("kevin").lastName("patel")
+                .phoneNumber("9664847593").email("kevinpatel1142@gmail.com")
+                .status(CustomerStatus.ACTIVE).preferredLanguage("EN")
+                .externalId("1").createdBy("self").createdOn(LocalDateTime.now())
+                .updatedBy("k-win").updatedOn(LocalDateTime.now()).build();
+
+        CustomerDto customerDto = customer.toDto();
+
+        Customer expectedResult = customerService.mapDtoToEntity(customerDto, customer);
+        Assertions.assertEquals(expectedResult,customer);
+    }
+
+    @Test
+    void validateUserNameAndReturnCustomer(){
+        String userName="kep";
+
         Customer customer=Customer.builder().userName("kep")
                 .firstName("kevin").lastName("patel")
                 .phoneNumber("9664847593").email("kevinpatel1142@gmail.com")
@@ -118,47 +108,17 @@ class CustomerServiceTest {
         CustomerDto customerDto = customer.toDto();
         Mockito.when(customerRepository.findByUserName(userName)).thenReturn(Optional.of(customer));
         Customer expectedResult = customerService.validateUserNameAndReturnCustomer(userName, customerDto);
+
+        Mockito.verify(customerDetailValidation)
+                .phone_Email_Language_Validation(customerDto.getPhoneNumber()
+                        ,customerDto.getEmail(),customerDto.getPreferredLanguage());
         Assertions.assertEquals(expectedResult,customer);
 
-
     }
 
 
-    @Test
-    void isEmailValid_ForValidEmail_ReturnsTrue() {
 
-        String email="kevinpatel1142000@gmail.com";
 
-       assertTrue(CustomerService.isEmailValid(email));
-    }
-    @Test
-    void isEmailValid_ForInvalidEmail_ReturnsFalse() {
 
-        String email="kevinpatel1142000gmail.com";
 
-        assertFalse(CustomerService.isEmailValid(email));
-    }
-
-    @Test
-    void isPhoneValid_ForValidPhoneNumber_ReturnsTrue() {
-        String number="9664847593";
-        assertTrue(customerService.isPhoneValid(number));
-    }
-    @Test
-    void isPhoneValid_ForInvalidPhoneNumber_ReturnsFalse() {
-        String number="9664847q39";
-        assertFalse(customerService.isPhoneValid(number));
-    }
-
-    @Test
-    void isLanguageValid_ForInvalidLanguage_Input_ReturnFalse(){
-        String language="Ea";
-        assertFalse(customerService.isLanguageValid(language));
-    }
-
-    @Test
-    void isLanguageValid_ForValidLanguage_Input_ReturnTrue(){
-        String language="EN";
-        assertTrue(customerService.isLanguageValid(language));
-    }
 }

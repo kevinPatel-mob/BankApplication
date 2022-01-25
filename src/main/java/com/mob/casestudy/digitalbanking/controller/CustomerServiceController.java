@@ -22,7 +22,8 @@ public class CustomerServiceController {
     private final CustomerService customerService;
 
     @Autowired
-    public CustomerServiceController(CustomerRepository customerRepository, CustomerService customerService) {
+    public CustomerServiceController(CustomerRepository customerRepository, CustomerService customerService)
+    {
         this.customerRepository = customerRepository;
         this.customerService = customerService;
     }
@@ -34,7 +35,7 @@ public class CustomerServiceController {
        return ResponseEntity.status(HttpStatus.OK).body(customerDto);
    }
 
-   @GetMapping(path = "/client-api/v1/customers/{name}")
+    @GetMapping(path = "/client-api/v1/customers/{name}")
     public ResponseEntity<CustomerDto> findByName(@PathVariable String name ){
        Optional<Customer> customerResult = customerRepository.findByUserName(name);
 
@@ -48,16 +49,12 @@ public class CustomerServiceController {
    }
 
 
-   @PatchMapping(path = "/client-api/v1/customers/{username}",produces = "application/json")
-    public ResponseEntity updateCustomer( @RequestBody CustomerDto customerDto , @PathVariable(required = false) String username){
 
-       System.out.println(">>>>>>>>>>>>>User name "+username);
+   @PatchMapping(path = "/client-api/v1/customers/{username}",produces = "application/json")
+    public ResponseEntity updateCustomer( @RequestBody CustomerDto customerDto , @PathVariable(required = false) String username)
+    {
        customerService.updateCustomer(username,customerDto);
        return new ResponseEntity("User Updated:"+username,HttpStatus.OK);
    }
-
-
-
-
 
 }

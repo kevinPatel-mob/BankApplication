@@ -24,8 +24,7 @@ class CustomerServiceControllerTest {
 
     @Mock
     CustomerService customerService;
-    @Mock
-    CustomerRepository customerRepository;
+
 
 
     @Test
@@ -36,10 +35,8 @@ class CustomerServiceControllerTest {
         CustomerDto customerDto=new CustomerDto();
         Customer customer=new Customer();
 
-        Mockito.when(customerService.validateUserNameAndReturnCustomer(customerName,customerDto)).thenReturn(customer);
         ResponseEntity responseEntity = customerServiceController.updateCustomer(customerDto, customerName);
         ResponseEntity expectedResponse=new ResponseEntity<>("User Updated:"+customerName, HttpStatus.OK);
         Assertions.assertThat(expectedResponse).usingRecursiveComparison().isEqualTo(responseEntity);
-        Mockito.verify(customerRepository,Mockito.times(1)).save(customer);
     }
 }
