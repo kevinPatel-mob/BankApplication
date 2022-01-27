@@ -2,10 +2,12 @@ package com.mob.casestudy.digitalbanking.controller;
 
 
 import com.mob.casestudy.digitalbanking.dto.CustomerDto;
+import com.mob.casestudy.digitalbanking.dto.SecurityQuestionsDto;
 import com.mob.casestudy.digitalbanking.entity.Customer;
-import com.mob.casestudy.digitalbanking.exceptionResponse.*;
+import com.mob.casestudy.digitalbanking.exceptionresponse.UserNotFoundException;
 import com.mob.casestudy.digitalbanking.repository.CustomerRepository;
 import com.mob.casestudy.digitalbanking.service.CustomerService;
+import com.mob.casestudy.digitalbanking.service.SecurityQuestionsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,41 +22,46 @@ public class CustomerServiceController {
 
     private final CustomerRepository customerRepository;
     private final CustomerService customerService;
+    private final SecurityQuestionsService securityQuestionsService;
 
     @Autowired
-    public CustomerServiceController(CustomerRepository customerRepository, CustomerService customerService)
-    {
+    public CustomerServiceController(CustomerRepository customerRepository, CustomerService customerService, SecurityQuestionsService securityQuestionsService) {
         this.customerRepository = customerRepository;
         this.customerService = customerService;
+        this.securityQuestionsService = securityQuestionsService;
     }
 
     @GetMapping(path = "/client-api/v1/customers")
-    public ResponseEntity<CustomerDto> getCustomers(){
-       List<Customer> customerList = customerRepository.findAll();
-       CustomerDto customerDto = customerList.get(0).toDto();
-       return ResponseEntity.status(HttpStatus.OK).body(customerDto);
-   }
+    public ResponseEntity<CustomerDto> getCustomers() {
+        List<Customer> customerList = customerRepository.findAll();
+        CustomerDto customerDto = customerList.get(0).toDto();
+        return ResponseEntity.status(HttpStatus.OK).body(customerDto);
+    }
 
     @GetMapping(path = "/client-api/v1/customers/{name}")
-    public ResponseEntity<CustomerDto> findByName(@PathVariable String name ){
-       Optional<Customer> customerResult = customerRepository.findByUserName(name);
+    public ResponseEntity<CustomerDto> findByName(@PathVariable String name) {
+        Optional<Customer> customerResult = customerRepository.findByUserName(name);
 
-       if (!customerResult.isEmpty()){
+        if (!customerResult.isEmpty()) {
 
-           CustomerDto customerDto = customerResult.get().toDto();
-           return ResponseEntity.status(HttpStatus.OK).body(customerDto);
-       }else {
-           throw  new UserNotFoundException();
-       }
-   }
+            CustomerDto customerDto = customerResult.get().toDto();
+            return ResponseEntity.status(HttpStatus.OK).body(customerDto);
+        } else {
+            throw new UserNotFoundException();
+        }
+    }
 
+    //TODO: Make the path variable as required
+    @PatchMapping(path = "/client-api/v1/customers/{username}", produces = "application/json")
+    public ResponseEntity<Object> updateCustomer(@RequestBody CustomerDto customerDto, @PathVariable String username) {
+        customerService.updateCustomer(username, customerDto);
+        return new ResponseEntity<>("User Updated:" + username, HttpStatus.OK);
+    }
 
-
-   @PatchMapping(path = "/client-api/v1/customers/{username}",produces = "application/json")
-    public ResponseEntity updateCustomer( @RequestBody CustomerDto customerDto , @PathVariable(required = false) String username)
-    {
-       customerService.updateCustomer(username,customerDto);
-       return new ResponseEntity("User Updated:"+username,HttpStatus.OK);
-   }
+    @GetMapping(path = "/client-api/v1/securityQuestions", produces = "application/json")
+    public ResponseEntity<Object> getAllSecurityQuestions() {
+        List<SecurityQuestionsDto> securityQuestionsDto = securityQuestionsService.retrieveAllQuestions();
+        return ResponseEntity.status(HttpStatus.OK).header("securityQuestions").body(securityQuestionsDto);
+    }
 
 }

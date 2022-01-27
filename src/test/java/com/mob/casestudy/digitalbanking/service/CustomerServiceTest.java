@@ -3,8 +3,7 @@ package com.mob.casestudy.digitalbanking.service;
 import com.mob.casestudy.digitalbanking.dto.CustomerDto;
 import com.mob.casestudy.digitalbanking.entity.Customer;
 import com.mob.casestudy.digitalbanking.enums.CustomerStatus;
-import com.mob.casestudy.digitalbanking.enums.Language;
-import com.mob.casestudy.digitalbanking.exceptionResponse.*;
+import com.mob.casestudy.digitalbanking.exceptionresponse.*;
 import com.mob.casestudy.digitalbanking.repository.CustomerRepository;
 import com.mob.casestudy.digitalbanking.validator.CustomerDetailValidation;
 import org.junit.jupiter.api.Assertions;
@@ -17,8 +16,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class CustomerServiceTest {
@@ -110,7 +107,7 @@ class CustomerServiceTest {
         Customer expectedResult = customerService.validateUserNameAndReturnCustomer(userName, customerDto);
 
         Mockito.verify(customerDetailValidation)
-                .phone_Email_Language_Validation(customerDto.getPhoneNumber()
+                .phoneEmailLanguageValidation(customerDto.getPhoneNumber()
                         ,customerDto.getEmail(),customerDto.getPreferredLanguage());
         Assertions.assertEquals(expectedResult,customer);
 

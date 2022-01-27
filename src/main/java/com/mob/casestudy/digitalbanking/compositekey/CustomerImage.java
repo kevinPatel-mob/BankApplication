@@ -1,4 +1,4 @@
-package com.mob.casestudy.digitalbanking.compositeKey;
+package com.mob.casestudy.digitalbanking.compositekey;
 
 import lombok.*;
 

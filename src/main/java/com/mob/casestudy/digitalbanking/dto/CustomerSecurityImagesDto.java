@@ -1,6 +1,6 @@
 package com.mob.casestudy.digitalbanking.dto;
 
-import com.mob.casestudy.digitalbanking.compositeKey.CustomerImage;
+import com.mob.casestudy.digitalbanking.compositekey.CustomerImage;
 import com.mob.casestudy.digitalbanking.entity.Customer;
 import com.mob.casestudy.digitalbanking.entity.SecurityImages;
 import lombok.AllArgsConstructor;

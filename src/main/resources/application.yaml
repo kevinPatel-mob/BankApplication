@@ -1,0 +1,23 @@
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    url: jdbc:postgresql://localhost:5433/bankApplication
+    password: ''
+  jpa:
+    generate-ddl: 'true'
+    database: POSTGRESQL
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: 'true'
+    defer-datasource-initialization: 'true'
+    show-sql: 'true'
+    hibernate:
+      ddl-auto: create
+  data:
+    jpa:
+      repositories:
+        bootstrap-mode: default

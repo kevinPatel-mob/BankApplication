@@ -1,6 +1,6 @@
 package com.mob.casestudy.digitalbanking.entity;
 
-import com.mob.casestudy.digitalbanking.compositeKey.CustomerOtpKey;
+import com.mob.casestudy.digitalbanking.compositekey.CustomerOtpKey;
 import lombok.*;
 
 import javax.persistence.*;

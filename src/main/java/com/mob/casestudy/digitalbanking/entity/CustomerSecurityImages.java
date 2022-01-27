@@ -1,6 +1,6 @@
 package com.mob.casestudy.digitalbanking.entity;
 
-import com.mob.casestudy.digitalbanking.compositeKey.CustomerImage;
+import com.mob.casestudy.digitalbanking.compositekey.CustomerImage;
 import lombok.*;
 
 import javax.persistence.*;

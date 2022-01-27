@@ -1,4 +1,4 @@
-package com.mob.casestudy.digitalbanking.errorCodes;
+package com.mob.casestudy.digitalbanking.errorcodes;
 
 
 
@@ -22,6 +22,10 @@ public class CustomisedErrorCodesAndDescription {
 
     public static final String MANDATORY_FIELD="CUS-UPDATE-FIE-001";
     public static final String MANDATORY_FIELD_DESCRIPTION="Field Must be Not null";
+
+    public static final String SECURITY_QUESTION_NOT_IN_TABLE="SQE-GET-FIE-001";
+    public static final String SECURITY_QUESTION_NOT_IN_TABLE_DESCRIPTION="Security Question Should Present in Table";
+
 
 
 

@@ -1,19 +1,13 @@
 package com.mob.casestudy.digitalbanking.validator;
 
-import com.mob.casestudy.digitalbanking.exceptionResponse.CustomisedExceptionHandler;
-import com.mob.casestudy.digitalbanking.exceptionResponse.InvalidEmailException;
-import com.mob.casestudy.digitalbanking.exceptionResponse.InvalidLanguageException;
-import com.mob.casestudy.digitalbanking.exceptionResponse.InvalidPhoneNumberException;
-import com.mob.casestudy.digitalbanking.service.CustomerService;
+import com.mob.casestudy.digitalbanking.exceptionresponse.InvalidEmailException;
+import com.mob.casestudy.digitalbanking.exceptionresponse.InvalidLanguageException;
+import com.mob.casestudy.digitalbanking.exceptionresponse.InvalidPhoneNumberException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -23,29 +17,29 @@ class CustomerDetailValidationTest {
     CustomerDetailValidation customerDetailValidation;
 
     @Test
-   public void phone_Email_Language_Validation_If_Email_Is_Invalid_Throw_EmailInvalid_Exception() {
+    void phone_Email_Language_Validation_If_Email_Is_Invalid_Throw_EmailInvalid_Exception() {
         String email="kevinpatel1142000gmail.com";
         String number="9664847593";
         String language="EN";
         Assertions.assertThrows(InvalidEmailException.class,
-                ()-> customerDetailValidation.phone_Email_Language_Validation(number,email,language));
+                ()-> customerDetailValidation.phoneEmailLanguageValidation(number,email,language));
     }
 
     @Test
-    public void phone_Email_Language_Validation_If_Phone_Is_InValid_Throw_PhoneInvalid_Exception() {
+     void phone_Email_Language_Validation_If_Phone_Is_InValid_Throw_PhoneInvalid_Exception() {
         String email="kevinpatel1142000@gmail.com";
         String number="966484759";
         String language="EN";
         Assertions.assertThrows(InvalidPhoneNumberException.class,
-                ()-> customerDetailValidation.phone_Email_Language_Validation(number,email,language));
+                ()-> customerDetailValidation.phoneEmailLanguageValidation(number,email,language));
     }
     @Test
-    public void phone_Email_Language_Validation_If_Language_Is_InValid_Throw_LanguageInvalid_Exception() {
+     void phone_Email_Language_Validation_If_Language_Is_InValid_Throw_LanguageInvalid_Exception() {
         String email="kevinpatel1142000@gmail.com";
         String number="9664847593";
         String language="E";
         Assertions.assertThrows(InvalidLanguageException.class,
-                ()-> customerDetailValidation.phone_Email_Language_Validation(number,email,language));
+                ()-> customerDetailValidation.phoneEmailLanguageValidation(number,email,language));
     }
 
 

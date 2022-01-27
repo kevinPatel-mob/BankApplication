@@ -1,31 +1,35 @@
 package com.mob.casestudy.digitalbanking.validator;
 
 import com.mob.casestudy.digitalbanking.enums.Language;
-import com.mob.casestudy.digitalbanking.exceptionResponse.InvalidEmailException;
-import com.mob.casestudy.digitalbanking.exceptionResponse.InvalidLanguageException;
-import com.mob.casestudy.digitalbanking.exceptionResponse.InvalidPhoneNumberException;
+import com.mob.casestudy.digitalbanking.exceptionresponse.InvalidEmailException;
+import com.mob.casestudy.digitalbanking.exceptionresponse.InvalidLanguageException;
+import com.mob.casestudy.digitalbanking.exceptionresponse.InvalidPhoneNumberException;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 @Component
+
 public class CustomerDetailValidation {
 
-    public void phone_Email_Language_Validation(String phone,String email,String language){
+    //TODO: Pass the dto and validate the respective fields
+    public void phoneEmailLanguageValidation(String phone, String email, String language) {
 
-        if (!isPhoneValid(phone)){
-            throw  new InvalidPhoneNumberException();
+        if (!isPhoneValid(phone)) {
+            throw new InvalidPhoneNumberException();
         }
 
-        if (!isEmailValid(email)){
+        if (!isEmailValid(email)) {
             throw new InvalidEmailException();
         }
 
-        if (!isLanguageValid(language)){
+        if (!isLanguageValid(language)) {
             throw new InvalidLanguageException();
         }
 
     }
 
-    public  boolean isEmailValid(String email) {
+    //TODO: Try to retrieve the regex from application.yml
+    public boolean isEmailValid(String email) {
         /**
          final Pattern EMAIL_REGEX =
          Pattern.compile("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$", Pattern.CASE_INSENSITIVE);
@@ -36,13 +40,16 @@ public class CustomerDetailValidation {
         return email.matches(regex);
     }
 
-    public boolean isPhoneValid(String number){
+    //TODO: Try to retrieve the regex from application.yml
+    public boolean isPhoneValid(String number) {
 
-        return  number.matches("^\\d{10}$");
+        return number.matches("^\\d{10}$");
     }
 
-    public boolean isLanguageValid(String language){
-        return   language.equalsIgnoreCase(Language.EN.name())
+    public boolean isLanguageValid(String language) {
+
+        //TODO: Optimize the condition. Use the enum method for validation
+        return language.equalsIgnoreCase(Language.EN.name())
                 || language.equalsIgnoreCase(Language.DE.toString())
                 || language.equalsIgnoreCase(Language.FR.toString());
 

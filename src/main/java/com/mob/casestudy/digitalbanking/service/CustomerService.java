@@ -4,14 +4,13 @@ import com.mob.casestudy.digitalbanking.dto.CustomerDto;
 import com.mob.casestudy.digitalbanking.entity.Customer;
 import com.mob.casestudy.digitalbanking.enums.CustomerStatus;
 import com.mob.casestudy.digitalbanking.enums.Language;
-import com.mob.casestudy.digitalbanking.exceptionResponse.*;
+import com.mob.casestudy.digitalbanking.exceptionresponse.*;
 import com.mob.casestudy.digitalbanking.repository.CustomerRepository;
 import com.mob.casestudy.digitalbanking.validator.CustomerDetailValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -26,9 +25,9 @@ public class CustomerService {
         this.customerDetailValidation = customerDetailValidation;
     }
 
-        public void saveCustomer(){
+    public void saveCustomer() {
 
-        Customer customer=Customer.builder().userName("kep")
+        Customer customer = Customer.builder().userName("kep")
                 .firstName("kevin").lastName("patel")
                 .phoneNumber("9664847593").email("kevinpatel1142@gmail.com")
                 .status(CustomerStatus.ACTIVE).preferredLanguage(Language.EN.toString())
@@ -38,34 +37,35 @@ public class CustomerService {
     }
 
 
-       public void updateCustomer(String userName, CustomerDto customerDto){
+    public void updateCustomer(String userName, CustomerDto customerDto) {
         Customer customer = validateUserNameAndReturnCustomer(userName, customerDto);
         customerRepository.save(customer);
-        }
+    }
 
-        public Customer validateUserNameAndReturnCustomer(String userName, CustomerDto customerDto)
-             {
-        Customer customerResult=validateCustomer(userName);
-             customerDetailValidation.
-                     phone_Email_Language_Validation(customerDto.getPhoneNumber(),
-                             customerDto.getEmail(),
-                             customerDto.getPreferredLanguage().trim().toUpperCase());
+    public Customer validateUserNameAndReturnCustomer(String userName, CustomerDto customerDto) {
+        Customer customerResult = validateCustomer(userName);
+        //TODO : Refactor the below method calls
+        customerDetailValidation.
+                phoneEmailLanguageValidation(customerDto.getPhoneNumber(),
+                        customerDto.getEmail(),
+                        customerDto.getPreferredLanguage().trim().toUpperCase());
 
         return mapDtoToEntity(customerDto, customerResult);
+    }
+
+
+    public Customer validateCustomer(String userName) {
+        Optional<Customer> customerResultOptional = customerRepository.findByUserName(userName);
+        //TODO : User isPresent method for optional
+        if (customerResultOptional.isEmpty()) {
+            throw new UserNotFoundException();
         }
+        return customerResultOptional.get();
+    }
 
-
-        public Customer validateCustomer(String userName){
-            Optional<Customer> customerResultOptional = customerRepository.findByUserName(userName);
-            if (customerResultOptional.isEmpty())
-            {
-                throw new UserNotFoundException();
-            }
-            return customerResultOptional.get();
-        }
-
-    public Customer mapDtoToEntity(CustomerDto customerDto, Customer customerResult)
-    {
+    //TODO: Use the builder annotation of lombok
+    //TODO: Set only the fields which are provided in request
+    public Customer mapDtoToEntity(CustomerDto customerDto, Customer customerResult) {
         customerResult.setFirstName(customerDto.getFirstName());
         customerResult.setLastName(customerDto.getLastName());
         customerResult.setPhoneNumber(customerDto.getPhoneNumber());

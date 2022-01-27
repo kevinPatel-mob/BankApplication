@@ -1,4 +1,4 @@
-package com.mob.casestudy.digitalbanking.exceptionResponse;
+package com.mob.casestudy.digitalbanking.exceptionresponse;
 
 
 import lombok.AllArgsConstructor;

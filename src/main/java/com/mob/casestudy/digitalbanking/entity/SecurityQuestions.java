@@ -1,5 +1,6 @@
 package com.mob.casestudy.digitalbanking.entity;
 
+import com.mob.casestudy.digitalbanking.dto.SecurityQuestionsDto;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -31,6 +32,10 @@ public class SecurityQuestions {
 
     @OneToMany(mappedBy = "securityQuestions")
     private List<CustomerSecurityQuestions> questionsList=new ArrayList<>();
+
+    public SecurityQuestionsDto toDto(){
+        return new SecurityQuestionsDto(securityQuestionId,securityQuestionText);
+    }
 
 
 }
