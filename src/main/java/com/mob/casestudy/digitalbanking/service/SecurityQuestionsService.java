@@ -34,10 +34,8 @@ public class SecurityQuestionsService {
            throw  new QuestionEmptyException();
         }
 
-        List<SecurityQuestionsDto> securityQuestionsDto=securityQuestionsList.stream().map(SecurityQuestions::toDto).toList();
+        return securityQuestionsList.stream().map(SecurityQuestions::toDto).toList();
 
-
-        return securityQuestionsDto;
     }
 
 

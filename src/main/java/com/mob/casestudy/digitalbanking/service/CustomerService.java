@@ -3,14 +3,12 @@ package com.mob.casestudy.digitalbanking.service;
 import com.mob.casestudy.digitalbanking.dto.CustomerDto;
 import com.mob.casestudy.digitalbanking.entity.Customer;
 import com.mob.casestudy.digitalbanking.enums.CustomerStatus;
-import com.mob.casestudy.digitalbanking.enums.Language;
 import com.mob.casestudy.digitalbanking.exceptionresponse.*;
 import com.mob.casestudy.digitalbanking.repository.CustomerRepository;
 import com.mob.casestudy.digitalbanking.validator.CustomerDetailValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -25,14 +23,7 @@ public class CustomerService {
         this.customerDetailValidation = customerDetailValidation;
     }
 
-    public void saveCustomer() {
-
-        Customer customer = Customer.builder().userName("kep")
-                .firstName("kevin").lastName("patel")
-                .phoneNumber("9664847593").email("kevinpatel1142@gmail.com")
-                .status(CustomerStatus.ACTIVE).preferredLanguage(Language.EN.toString())
-                .externalId("1").createdBy("self").createdOn(LocalDateTime.now())
-                .updatedBy("k-win").updatedOn(LocalDateTime.now()).build();
+    public void saveCustomer(Customer customer) {
         customerRepository.save(customer);
     }
 
