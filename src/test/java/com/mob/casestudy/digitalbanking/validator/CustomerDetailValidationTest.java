@@ -1,5 +1,8 @@
 package com.mob.casestudy.digitalbanking.validator;
 
+import com.mob.casestudy.digitalbanking.dto.CustomerDto;
+import com.mob.casestudy.digitalbanking.entity.Customer;
+import com.mob.casestudy.digitalbanking.enums.CustomerStatus;
 import com.mob.casestudy.digitalbanking.exceptionresponse.InvalidEmailException;
 import com.mob.casestudy.digitalbanking.exceptionresponse.InvalidLanguageException;
 import com.mob.casestudy.digitalbanking.exceptionresponse.InvalidPhoneNumberException;
@@ -8,6 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.LocalDateTime;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -18,28 +23,47 @@ class CustomerDetailValidationTest {
 
     @Test
     void phone_Email_Language_Validation_If_Email_Is_Invalid_Throw_EmailInvalid_Exception() {
-        String email="kevinpatel1142000gmail.com";
-        String number="9664847593";
-        String language="EN";
+
+        Customer customer=Customer.builder().userName("kep")
+                .firstName("kevin").lastName("patel")
+                .phoneNumber("9664847593").email("kevinpatel1142000gmail.com")
+                .status(CustomerStatus.ACTIVE).preferredLanguage("EN")
+                .externalId("1").createdBy("self").createdOn(LocalDateTime.now())
+                .updatedBy("k-win").updatedOn(LocalDateTime.now()).build();
+
+        CustomerDto customerDto = customer.toDto();
+
         Assertions.assertThrows(InvalidEmailException.class,
-                ()-> customerDetailValidation.phoneEmailLanguageValidation(number,email,language));
+                ()-> customerDetailValidation.phoneEmailLanguageValidation(customerDto));
     }
 
     @Test
      void phone_Email_Language_Validation_If_Phone_Is_InValid_Throw_PhoneInvalid_Exception() {
-        String email="kevinpatel1142000@gmail.com";
-        String number="966484759";
-        String language="EN";
+
+        Customer customer=Customer.builder().userName("kep")
+                .firstName("kevin").lastName("patel")
+                .phoneNumber("966484759").email("kevinpatel1142000gmail.com")
+                .status(CustomerStatus.ACTIVE).preferredLanguage("EN")
+                .externalId("1").createdBy("self").createdOn(LocalDateTime.now())
+                .updatedBy("k-win").updatedOn(LocalDateTime.now()).build();
+
+        CustomerDto customerDto = customer.toDto();
+
         Assertions.assertThrows(InvalidPhoneNumberException.class,
-                ()-> customerDetailValidation.phoneEmailLanguageValidation(number,email,language));
+                ()-> customerDetailValidation.phoneEmailLanguageValidation(customerDto));
     }
     @Test
      void phone_Email_Language_Validation_If_Language_Is_InValid_Throw_LanguageInvalid_Exception() {
-        String email="kevinpatel1142000@gmail.com";
-        String number="9664847593";
-        String language="E";
+        Customer customer=Customer.builder().userName("kep")
+                .firstName("kevin").lastName("patel")
+                .phoneNumber("9664847593").email("kevinpatel1142000gmail.com")
+                .status(CustomerStatus.ACTIVE).preferredLanguage("E")
+                .externalId("1").createdBy("self").createdOn(LocalDateTime.now())
+                .updatedBy("k-win").updatedOn(LocalDateTime.now()).build();
+
+        CustomerDto customerDto = customer.toDto();
         Assertions.assertThrows(InvalidLanguageException.class,
-                ()-> customerDetailValidation.phoneEmailLanguageValidation(number,email,language));
+                ()-> customerDetailValidation.phoneEmailLanguageValidation(customerDto));
     }
 
 

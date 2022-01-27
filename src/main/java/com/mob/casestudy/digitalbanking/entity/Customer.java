@@ -17,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @Setter
 @Builder
+@With
 public class Customer {
 
 

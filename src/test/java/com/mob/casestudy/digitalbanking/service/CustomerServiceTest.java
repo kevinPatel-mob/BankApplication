@@ -107,8 +107,7 @@ class CustomerServiceTest {
         Customer expectedResult = customerService.validateUserNameAndReturnCustomer(userName, customerDto);
 
         Mockito.verify(customerDetailValidation)
-                .phoneEmailLanguageValidation(customerDto.getPhoneNumber()
-                        ,customerDto.getEmail(),customerDto.getPreferredLanguage());
+                .phoneEmailLanguageValidation(customerDto);
         Assertions.assertEquals(expectedResult,customer);
 
     }

@@ -1,28 +1,30 @@
 package com.mob.casestudy.digitalbanking.validator;
 
+import com.mob.casestudy.digitalbanking.dto.CustomerDto;
 import com.mob.casestudy.digitalbanking.enums.Language;
 import com.mob.casestudy.digitalbanking.exceptionresponse.InvalidEmailException;
 import com.mob.casestudy.digitalbanking.exceptionresponse.InvalidLanguageException;
 import com.mob.casestudy.digitalbanking.exceptionresponse.InvalidPhoneNumberException;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
 
 @Component
 
 public class CustomerDetailValidation {
 
     //TODO: Pass the dto and validate the respective fields
-    public void phoneEmailLanguageValidation(String phone, String email, String language) {
+    public void phoneEmailLanguageValidation(CustomerDto customerDto) {
 
-        if (!isPhoneValid(phone)) {
+        if (!isPhoneValid(customerDto.getPhoneNumber())) {
             throw new InvalidPhoneNumberException();
         }
 
-        if (!isEmailValid(email)) {
+        if (!isEmailValid(customerDto.getEmail())) {
             throw new InvalidEmailException();
         }
 
-        if (!isLanguageValid(language)) {
+        if (!isLanguageValid(customerDto.getPreferredLanguage().trim().toUpperCase())) {
             throw new InvalidLanguageException();
         }
 
@@ -47,11 +49,8 @@ public class CustomerDetailValidation {
     }
 
     public boolean isLanguageValid(String language) {
-
         //TODO: Optimize the condition. Use the enum method for validation
-        return language.equalsIgnoreCase(Language.EN.name())
-                || language.equalsIgnoreCase(Language.DE.toString())
-                || language.equalsIgnoreCase(Language.FR.toString());
-
+        return    Arrays.stream(Language.values()).map(Enum::toString)
+                .filter(e -> e.equalsIgnoreCase(language)).findAny().isPresent();
     }
 }

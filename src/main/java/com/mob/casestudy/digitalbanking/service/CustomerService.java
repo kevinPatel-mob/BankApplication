@@ -46,9 +46,7 @@ public class CustomerService {
         Customer customerResult = validateCustomer(userName);
         //TODO : Refactor the below method calls
         customerDetailValidation.
-                phoneEmailLanguageValidation(customerDto.getPhoneNumber(),
-                        customerDto.getEmail(),
-                        customerDto.getPreferredLanguage().trim().toUpperCase());
+                phoneEmailLanguageValidation(customerDto);
 
         return mapDtoToEntity(customerDto, customerResult);
     }
@@ -57,7 +55,7 @@ public class CustomerService {
     public Customer validateCustomer(String userName) {
         Optional<Customer> customerResultOptional = customerRepository.findByUserName(userName);
         //TODO : User isPresent method for optional
-        if (customerResultOptional.isEmpty()) {
+        if (!customerResultOptional.isPresent()) {
             throw new UserNotFoundException();
         }
         return customerResultOptional.get();
@@ -66,12 +64,12 @@ public class CustomerService {
     //TODO: Use the builder annotation of lombok
     //TODO: Set only the fields which are provided in request
     public Customer mapDtoToEntity(CustomerDto customerDto, Customer customerResult) {
-        customerResult.setFirstName(customerDto.getFirstName());
-        customerResult.setLastName(customerDto.getLastName());
-        customerResult.setPhoneNumber(customerDto.getPhoneNumber());
-        customerResult.setEmail(customerDto.getEmail());
-        customerResult.setPreferredLanguage(customerDto.getPreferredLanguage());
-        customerResult.setStatus(CustomerStatus.valueOf(customerDto.getStatus()));
+        customerResult = customerResult.withFirstName(customerDto.getFirstName())
+                .withLastName(customerDto.getLastName())
+                .withPhoneNumber(customerDto.getPhoneNumber())
+                .withEmail(customerDto.getEmail())
+                .withPreferredLanguage(customerDto.getPreferredLanguage())
+                .withStatus(CustomerStatus.valueOf(customerDto.getStatus()));
 
         return customerResult;
     }

@@ -5,6 +5,7 @@ import lombok.*;
 
 @NoArgsConstructor
 @Getter
+@AllArgsConstructor
 public class CustomerDto {
 
     //TODO: REmove the constructor and use the lombok annotation
@@ -22,18 +23,7 @@ public class CustomerDto {
     private String preferredLanguage;
 
 
-    public CustomerDto(String userName, String firstName, String lastName, String phoneNumber, String email, String status
-            , String preferredLanguage) {
-        this.userName = userName;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
-        this.email = email;
-        this.status = status;
-        this.preferredLanguage = preferredLanguage;
 
-
-    }
 
 
 }
