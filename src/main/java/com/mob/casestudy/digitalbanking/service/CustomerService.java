@@ -57,7 +57,6 @@ public class CustomerService {
 
     public Customer validateUserNameAndReturnCustomer(String userName, CustomerDto customerDto) {
         Customer customerResult = validateCustomer(userName);
-        //TODO : Refactor the below method calls
         customerDetailValidation.
                 phoneEmailLanguageValidation(customerDto);
 
@@ -67,15 +66,18 @@ public class CustomerService {
 
     public Customer validateCustomer(String userName) {
         Optional<Customer> customerResultOptional = customerRepository.findByUserName(userName);
-        //TODO : User isPresent method for optional
         if (!customerResultOptional.isPresent()) {
             throw new UserNotFoundException();
         }
         return customerResultOptional.get();
     }
 
-    //TODO: Use the builder annotation of lombok
-    //TODO: Set only the fields which are provided in request
+    public void validateFieldAndPassToDto(CustomerDto customerDto){
+
+
+    }
+
+    //TODO: handle the null check
     public Customer mapDtoToEntity(CustomerDto customerDto, Customer customerResult) {
         customerResult = customerResult.withFirstName(customerDto.getFirstName())
                 .withLastName(customerDto.getLastName())

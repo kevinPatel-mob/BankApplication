@@ -51,7 +51,6 @@ public class CustomerServiceController {
         }
     }
 
-    //TODO: Make the path variable as required
     @PatchMapping(path = "/client-api/v1/customers/{username}", produces = "application/json")
     public ResponseEntity<Object> updateCustomer(@RequestBody CustomerDto customerDto, @PathVariable String username) {
         customerService.updateCustomer(username, customerDto);

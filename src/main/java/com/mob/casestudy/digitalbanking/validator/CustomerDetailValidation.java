@@ -18,7 +18,6 @@ public class CustomerDetailValidation {
     @Autowired
     RegexValues regexValues;
 
-    //TODO: Pass the dto and validate the respective fields
     public void phoneEmailLanguageValidation(CustomerDto customerDto) {
 
         if (!isPhoneValid(customerDto.getPhoneNumber())) {
@@ -32,18 +31,15 @@ public class CustomerDetailValidation {
         }
     }
 
-    //TODO: Try to retrieve the regex from application.yml
     public boolean isEmailValid(String email) {
         return email.matches(regexValues.getEmailRegex());
     }
 
-    //TODO: Try to retrieve the regex from application.yml
     public boolean isPhoneValid(String number) {
         return number.matches(regexValues.getPhoneRegex());
     }
 
     public boolean isLanguageValid(String language) {
-        //TODO: Optimize the condition. Use the enum method for validation
         return Arrays.stream(Language.values()).map(Enum::toString).anyMatch(l -> l.equalsIgnoreCase(language));
     }
 }

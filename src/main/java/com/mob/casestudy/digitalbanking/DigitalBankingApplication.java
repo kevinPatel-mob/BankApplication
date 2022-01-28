@@ -29,8 +29,6 @@ public class DigitalBankingApplication implements CommandLineRunner {
         SpringApplication.run(DigitalBankingApplication.class, args);
     }
 
-    //TODO: Refactor all the package name from camel case to lower case
-    //TODO: Convert application.properties to application.yml
     @Override
     public void run(String... args) throws Exception {
         Customer customer = Customer.builder().userName("kep")
