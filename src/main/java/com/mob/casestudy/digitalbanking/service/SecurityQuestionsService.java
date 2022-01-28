@@ -13,30 +13,25 @@ import java.util.List;
 @Service
 public class SecurityQuestionsService {
 
+    private final SecurityQuestionsRepository securityQuestionsRepository;
+
     @Autowired
-    SecurityQuestionsRepository securityQuestionsRepository;
+    public SecurityQuestionsService(SecurityQuestionsRepository securityQuestionsRepository) {
+        this.securityQuestionsRepository = securityQuestionsRepository;
+    }
 
-    public void addSecurityQuestions(){
-
-
+    public void addSecurityQuestions() {
         securityQuestionsRepository.save(SecurityQuestions.builder().securityQuestionText("What is Your Favourite Car").build());
         securityQuestionsRepository.save(SecurityQuestions.builder().securityQuestionText("What is Your  ChildHood name").build());
         securityQuestionsRepository.save(SecurityQuestions.builder().securityQuestionText("What is Your School name").build());
         securityQuestionsRepository.save(SecurityQuestions.builder().securityQuestionText("What is Your Dream Company").build());
-
-
-
     }
 
     public List<SecurityQuestionsDto> retrieveAllQuestions() {
         List<SecurityQuestions> securityQuestionsList = securityQuestionsRepository.findAll();
-        if (securityQuestionsList.isEmpty()){
-           throw  new QuestionEmptyException();
+        if (securityQuestionsList.isEmpty()) {
+            throw new QuestionEmptyException();
         }
-
         return securityQuestionsList.stream().map(SecurityQuestions::toDto).toList();
-
     }
-
-
 }

@@ -3,19 +3,16 @@ package com.mob.casestudy.digitalbanking.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
 
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-public class SecurityQuestionsDto {
+public class GetAllSecurityQuestionDto {
 
-    private String securityQuestionId ;
-
-    private String securityQuestionText;
-
-
-
+    private List<SecurityQuestionsDto> securityQuestions;
 }

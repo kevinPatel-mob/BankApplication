@@ -2,7 +2,7 @@ package com.mob.casestudy.digitalbanking.controller;
 
 
 import com.mob.casestudy.digitalbanking.dto.CustomerDto;
-import com.mob.casestudy.digitalbanking.dto.SecurityQuestionsDto;
+import com.mob.casestudy.digitalbanking.dto.GetAllSecurityQuestionDto;
 import com.mob.casestudy.digitalbanking.entity.Customer;
 import com.mob.casestudy.digitalbanking.exceptionresponse.UserNotFoundException;
 import com.mob.casestudy.digitalbanking.repository.CustomerRepository;
@@ -60,8 +60,8 @@ public class CustomerServiceController {
 
     @GetMapping(path = "/client-api/v1/securityQuestions", produces = "application/json")
     public ResponseEntity<Object> getAllSecurityQuestions() {
-        List<SecurityQuestionsDto> securityQuestionsDto = securityQuestionsService.retrieveAllQuestions();
-        return ResponseEntity.status(HttpStatus.OK).header("securityQuestions").body(securityQuestionsDto);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new GetAllSecurityQuestionDto(securityQuestionsService.retrieveAllQuestions()));
     }
 
 }

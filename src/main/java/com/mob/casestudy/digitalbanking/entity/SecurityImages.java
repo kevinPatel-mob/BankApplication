@@ -32,7 +32,7 @@ public class SecurityImages {
     @Column(length = 255)
     private String securityImageUrl;
 
-    @OneToMany(mappedBy = "securityImages")
+    @OneToMany(mappedBy = "securityImages",fetch = FetchType.LAZY)
     private List<CustomerSecurityImages> customerSecurityImagesList=new ArrayList<>();
 
 
