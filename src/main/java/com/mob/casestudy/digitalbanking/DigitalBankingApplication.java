@@ -37,8 +37,10 @@ public class DigitalBankingApplication implements CommandLineRunner {
                 .status(CustomerStatus.ACTIVE).preferredLanguage(Language.EN.toString())
                 .externalId("1").createdBy("self").createdOn(LocalDateTime.now())
                 .updatedBy("k-win").updatedOn(LocalDateTime.now()).build();
-        customerService.saveCustomer(customer);
-        customerService.saveCustomerSecurityImage(customer);
-        securityQuestionsService.addSecurityQuestions();
+     //   customerService.saveCustomer(customer);
+     //   customerService.saveCustomerSecurityImage(customer);
+     //   securityQuestionsService.addSecurityQuestions();
+
+        securityQuestionsService.addCustomerQuestionAnswer();
     }
 }

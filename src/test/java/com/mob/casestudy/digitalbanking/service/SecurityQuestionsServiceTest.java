@@ -44,10 +44,12 @@ class SecurityQuestionsServiceTest {
                 securityQuestionText("What is Your  ChildHood name").build();
         List<SecurityQuestions> questionsList=new ArrayList<>();
         questionsList.add(question1);
+
         SecurityQuestionsDto securityQuestionsDto = questionsList.get(0).toDto();
 
         Mockito.when(securityQuestionsRepository.findAll()).thenReturn(questionsList);
         List<SecurityQuestionsDto> expectedResult = securityQuestionsService.retrieveAllQuestions();
-        Assertions.assertEquals(expectedResult.get(0),securityQuestionsDto);
+        org.assertj.core.api.Assertions.assertThat(expectedResult.get(0))
+                .usingRecursiveComparison().isEqualTo(securityQuestionsDto);
     }
 }

@@ -26,7 +26,11 @@ public class CustomisedErrorCodesAndDescription {
     public static final String SECURITY_QUESTION_NOT_IN_TABLE="SQE-GET-FIE-001";
     public static final String SECURITY_QUESTION_NOT_IN_TABLE_DESCRIPTION="Security Question Should Present in Table";
 
+    public static final String CUSTOMER_SECURITY_QUESTION_NOT_IN_TABLE="CSQ-GET-FIE-001";
+    public static final String CUSTOMER_SECURITY_QUESTION_NOT_IN_TABLE_DESCRIPTION="Customer Security Question Should Present in Table";
 
+    public static final String CUSTOMER_NOT_IN_TABLE="CSQ-GET-FIE-002";
+    public static final String CUSTOMER_NOT_IN_TABLE_DESCRIPTION="Customer not found in database";
 
 
 

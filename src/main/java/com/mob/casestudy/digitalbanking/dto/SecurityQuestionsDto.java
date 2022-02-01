@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class SecurityQuestionsDto {
-
     private String securityQuestionId;
     private String securityQuestionText;
 }

@@ -3,6 +3,7 @@ package com.mob.casestudy.digitalbanking.controller;
 
 import com.mob.casestudy.digitalbanking.dto.CustomerDto;
 import com.mob.casestudy.digitalbanking.dto.GetAllSecurityQuestionDto;
+import com.mob.casestudy.digitalbanking.dto.GetCustomerSecurityQuestionsResponse;
 import com.mob.casestudy.digitalbanking.entity.Customer;
 import com.mob.casestudy.digitalbanking.exceptionresponse.UserNotFoundException;
 import com.mob.casestudy.digitalbanking.repository.CustomerRepository;
@@ -12,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -57,10 +57,20 @@ public class CustomerServiceController {
         return new ResponseEntity<>("User Updated:" + username, HttpStatus.OK);
     }
 
+    @PatchMapping(path = "/client-api/v1/customers/demo/{username}", produces = "application/json")
+    public ResponseEntity<Object> updateCustomerDemo(@RequestBody CustomerDto customerDto, @PathVariable String username) {
+        customerService.updateCustomerDemo(username, customerDto);
+        return new ResponseEntity<>("User Updated:" + username, HttpStatus.OK);
+    }
     @GetMapping(path = "/client-api/v1/securityQuestions", produces = "application/json")
     public ResponseEntity<Object> getAllSecurityQuestions() {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new GetAllSecurityQuestionDto(securityQuestionsService.retrieveAllQuestions()));
+    }
+    @GetMapping(path = "/client-api/v1/customers/{username}/securityQuestions", produces = "application/json")
+    public ResponseEntity<Object> getCustomerSecurityQuestions(@PathVariable String username) {
+        return  ResponseEntity.status(HttpStatus.OK).body(new GetCustomerSecurityQuestionsResponse(securityQuestionsService.
+                        getSecurityQuestionAndAnswer(username)));
     }
 
 }

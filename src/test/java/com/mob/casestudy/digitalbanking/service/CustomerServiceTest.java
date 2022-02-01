@@ -103,7 +103,7 @@ class CustomerServiceTest {
 
         CustomerDto customerDto = customer.toDto();
 
-        Customer expectedResult = customerService.mapDtoToEntity(customerDto, customer);
+        Customer expectedResult = customerService.validateFieldAndPassToDto(customerDto, customer);
         Assertions.assertEquals(expectedResult, customer);
     }
 

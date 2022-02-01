@@ -86,7 +86,6 @@ class CustomerDetailValidationTest {
     void isEmailValid_ForValidEmail_ReturnsTrue() {
 
         String email = "kevinpatel1142000@gmail.com";
-    //
         String value=  "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
         Mockito.when(regexValues.getEmailRegex()).thenReturn(value);
         Assertions.assertTrue(customerDetailValidation.isEmailValid(email));

@@ -14,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @Setter
 @Builder
+@Getter
 public class SecurityQuestions {
 
     @Id
@@ -24,12 +25,8 @@ public class SecurityQuestions {
     )
     @Column(name = "id", nullable = false, updatable = false, insertable = false)
     private String securityQuestionId ;
-
-
     @Column(length = 50)
     private String securityQuestionText;
-
-
     @OneToMany(mappedBy = "securityQuestions")
     private List<CustomerSecurityQuestions> questionsList=new ArrayList<>();
 

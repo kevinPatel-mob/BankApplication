@@ -13,16 +13,12 @@ import javax.persistence.*;
 @Builder
 public class CustomerSecurityImages {
 
-
-@EmbeddedId
-private CustomerImage customerImage=new CustomerImage();
-
+    @EmbeddedId
+    private CustomerImage customerImage = new CustomerImage();
     @Column(length = 50)
     private String securityImageCaption;
-
     @Column(length = 50)
     private String createdOn;
-
     @ManyToOne
     @JoinColumn(name = "securityImageId")
     @MapsId("securityImageId")
@@ -31,8 +27,6 @@ private CustomerImage customerImage=new CustomerImage();
     @OneToOne
     @MapsId("customerId")
     private Customer customer;
-
-
 
 
 }

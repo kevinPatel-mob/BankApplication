@@ -23,23 +23,25 @@ public class CustomerDetailValidation {
         if (!isPhoneValid(customerDto.getPhoneNumber())) {
             throw new InvalidPhoneNumberException();
         }
-        if (!isEmailValid(customerDto.getEmail())) {
+        if ( !isEmailValid(customerDto.getEmail())) {
             throw new InvalidEmailException();
         }
-        if (!isLanguageValid(customerDto.getPreferredLanguage().trim().toUpperCase())) {
+        if (customerDto.getPreferredLanguage()!=null &&!isLanguageValid(customerDto.getPreferredLanguage())) {
             throw new InvalidLanguageException();
         }
     }
 
     public boolean isEmailValid(String email) {
-        return email.matches(regexValues.getEmailRegex());
+
+        return email ==null ||  email.isEmpty() || email.matches(regexValues.getEmailRegex())  ;
+
     }
 
     public boolean isPhoneValid(String number) {
-        return number.matches(regexValues.getPhoneRegex());
+        return number ==null || number.isEmpty() ||  number.matches(regexValues.getPhoneRegex());
     }
 
     public boolean isLanguageValid(String language) {
-        return Arrays.stream(Language.values()).map(Enum::toString).anyMatch(l -> l.equalsIgnoreCase(language));
+        return  language.trim().isEmpty() || Arrays.stream(Language.values()).map(Enum::toString).anyMatch(l -> l.equalsIgnoreCase(language));
     }
 }

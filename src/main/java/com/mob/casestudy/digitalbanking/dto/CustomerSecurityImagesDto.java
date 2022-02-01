@@ -13,14 +13,8 @@ import lombok.NoArgsConstructor;
 @Getter
 public class CustomerSecurityImagesDto {
     private CustomerImage customerImage;
-
     private String securityImageCaption;
-
     private String createdOn;
-
-
     private SecurityImages securityImages;
-
     private Customer customer;
-
 }

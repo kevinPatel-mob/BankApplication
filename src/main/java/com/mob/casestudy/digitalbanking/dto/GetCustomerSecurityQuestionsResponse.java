@@ -6,11 +6,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.util.List;
 
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetAllSecurityQuestionDto {
-    private List<SecurityQuestionsDto> securityQuestions;
+public class GetCustomerSecurityQuestionsResponse {
+    private List<CustomerSecurityQuestionsDto> securityQuestions;
 }
+

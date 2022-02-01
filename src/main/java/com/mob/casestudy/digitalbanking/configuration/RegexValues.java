@@ -9,11 +9,8 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 @Setter
 public class RegexValues {
-
     @Value("${regex.phone}")
     public String phoneRegex;
-
     @Value("${regex.email}")
     public String emailRegex;
-
 }
