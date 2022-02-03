@@ -88,7 +88,7 @@ class CustomerServiceTest {
                 .updatedBy("k-win").updatedOn(LocalDateTime.now()).build();
 
         Mockito.when(customerRepository.findByUserName(userName)).thenReturn(Optional.empty());
-        Assertions.assertThrows(UserNotFoundException.class,
+        Assertions.assertThrows(DataNotFoundException.class,
                 () -> customerService.validateCustomer(userName));
     }
 

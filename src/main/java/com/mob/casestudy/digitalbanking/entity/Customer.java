@@ -61,6 +61,11 @@ public class Customer {
     private CustomerOtp customerOtp;
     @OneToMany(mappedBy = "customer")
     private List<CustomerSecurityQuestions> questionsList=new ArrayList<>();
+
+    public void addQuestionsList(CustomerSecurityQuestions questionsList) {
+        this.questionsList.add(questionsList);
+    }
+
     @OneToOne(mappedBy = "customer")
     private CustomerSecurityImages customerSecurityImages;
 

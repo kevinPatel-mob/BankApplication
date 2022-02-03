@@ -32,6 +32,9 @@ public class CustomisedErrorCodesAndDescription {
     public static final String CUSTOMER_NOT_IN_TABLE="CSQ-GET-FIE-002";
     public static final String CUSTOMER_NOT_IN_TABLE_DESCRIPTION="Customer not found in database";
 
+    public static final String CUSTOMER_SECURITY_IMAGE_NOT_IN_TABLE="CSI-CREATE-FIE-003";
+    public static final String CUSTOMER_SECURITY_IMAGE_NOT_IN_TABLE_DESCRIPTION="Customer Security IMAGE Should Present in Table";
+
 
 
 

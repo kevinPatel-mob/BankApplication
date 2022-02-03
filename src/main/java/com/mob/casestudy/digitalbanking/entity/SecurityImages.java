@@ -13,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @Setter
 @Builder
+@Getter
 public class SecurityImages {
 
 

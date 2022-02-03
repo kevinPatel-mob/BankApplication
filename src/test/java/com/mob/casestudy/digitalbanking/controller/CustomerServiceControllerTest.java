@@ -6,7 +6,7 @@ import com.mob.casestudy.digitalbanking.dto.SecurityQuestionsDto;
 import com.mob.casestudy.digitalbanking.entity.Customer;
 import com.mob.casestudy.digitalbanking.entity.SecurityQuestions;
 import com.mob.casestudy.digitalbanking.enums.CustomerStatus;
-import com.mob.casestudy.digitalbanking.exceptionresponse.UserNotFoundException;
+import com.mob.casestudy.digitalbanking.exceptionresponse.DataNotFoundException;
 import com.mob.casestudy.digitalbanking.repository.CustomerRepository;
 import com.mob.casestudy.digitalbanking.service.CustomerService;
 import com.mob.casestudy.digitalbanking.service.SecurityQuestionsService;
@@ -91,7 +91,7 @@ class CustomerServiceControllerTest {
                 .updatedBy("k-win").updatedOn(LocalDateTime.now()).build();
         CustomerDto customerDto = customer.toDto();
         Mockito.when(customerRepository.findByUserName(userName)).thenReturn(Optional.empty());
-        org.junit.jupiter.api.Assertions.assertThrows(UserNotFoundException.class,
+        org.junit.jupiter.api.Assertions.assertThrows(DataNotFoundException.class,
                 () -> customerServiceController.findByName(userName));
     }
 

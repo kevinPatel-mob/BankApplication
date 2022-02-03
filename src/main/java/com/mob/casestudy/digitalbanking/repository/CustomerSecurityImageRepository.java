@@ -8,4 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public interface CustomerSecurityImageRepository extends JpaRepository<CustomerSecurityImages,String> {
+
+
+    void deleteCustomerSecurityImagesBySecurityImages_SecurityImageId(String securityImageId);
 }

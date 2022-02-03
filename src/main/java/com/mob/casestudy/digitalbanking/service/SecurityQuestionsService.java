@@ -7,20 +7,18 @@ import com.mob.casestudy.digitalbanking.dto.SecurityQuestionsDto;
 import com.mob.casestudy.digitalbanking.entity.Customer;
 import com.mob.casestudy.digitalbanking.entity.CustomerSecurityQuestions;
 import com.mob.casestudy.digitalbanking.entity.SecurityQuestions;
-import com.mob.casestudy.digitalbanking.enums.CustomerStatus;
-import com.mob.casestudy.digitalbanking.enums.Language;
-import com.mob.casestudy.digitalbanking.exceptionresponse.CustomerNotPresentException;
-import com.mob.casestudy.digitalbanking.exceptionresponse.CustomerSecurityQuestionNotFountException;
-import com.mob.casestudy.digitalbanking.exceptionresponse.QuestionEmptyException;
+import com.mob.casestudy.digitalbanking.exceptionresponse.DataNotFoundException;
 import com.mob.casestudy.digitalbanking.repository.CustomerRepository;
 import com.mob.casestudy.digitalbanking.repository.CustomerSecurityQuestionRepository;
 import com.mob.casestudy.digitalbanking.repository.SecurityQuestionsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+
+import static com.mob.casestudy.digitalbanking.errorcodes.CustomisedErrorCodesAndDescription.*;
 
 @Service
 public class SecurityQuestionsService {
@@ -37,33 +35,22 @@ public class SecurityQuestionsService {
         this.customerSecurityQuestionRepository = customerSecurityQuestionRepository;
     }
 
-    public void addSecurityQuestions() {
-        securityQuestionsRepository.save(SecurityQuestions.builder().securityQuestionText("What is Your Favourite Car").build());
-        securityQuestionsRepository.save(SecurityQuestions.builder().securityQuestionText("What is Your  ChildHood name").build());
-        securityQuestionsRepository.save(SecurityQuestions.builder().securityQuestionText("What is Your School name").build());
-        securityQuestionsRepository.save(SecurityQuestions.builder().securityQuestionText("What is Your Dream Company").build());
-    }
+
 
     public List<SecurityQuestionsDto> retrieveAllQuestions() {
         List<SecurityQuestions> securityQuestionsList = securityQuestionsRepository.findAll();
         if (securityQuestionsList.isEmpty()) {
-            throw new QuestionEmptyException();
+            throw new DataNotFoundException(SECURITY_QUESTION_NOT_IN_TABLE,SECURITY_QUESTION_NOT_IN_TABLE_DESCRIPTION);
         }
         return securityQuestionsList.stream().map(SecurityQuestions::toDto).toList();
     }
 
-    public void addCustomerQuestionAnswer() {
+    public void addCustomerQuestionAnswer(Customer customer) {
         SecurityQuestions question1 = securityQuestionsRepository.save
                 (SecurityQuestions.builder().securityQuestionText("What is Your Favourite Car").build());
         SecurityQuestions question2 = securityQuestionsRepository.save(SecurityQuestions.builder().securityQuestionText("What is Your  ChildHood name").build());
         SecurityQuestions question3 = securityQuestionsRepository.save(SecurityQuestions.builder().securityQuestionText("What is Your School name").build());
-        Customer customer = Customer.builder().userName("kep")
-                .firstName("kevin").lastName("patel")
-                .phoneNumber("9664847593").email("kevinpatel1142@gmail.com")
-                .status(CustomerStatus.ACTIVE).preferredLanguage(Language.EN.toString())
-                .externalId("1").createdBy("self").createdOn(LocalDateTime.now())
-                .updatedBy("k-win").updatedOn(LocalDateTime.now()).build();
-        customerRepository.save(customer);
+
         CustomerSecurityQuestions customerSecurityQuestions1 = CustomerSecurityQuestions.builder().customer(customer).securityQuestions(question1)
                 .createdOn("now").customerQuestions(new CustomerQuestions()).securityQuestionAnswer("BMW").build();
         CustomerSecurityQuestions customerSecurityQuestions2 = CustomerSecurityQuestions.builder().customer(customer).securityQuestions(question2)
@@ -78,14 +65,14 @@ public class SecurityQuestionsService {
     public List<CustomerSecurityQuestionsDto> getSecurityQuestionAndAnswer(String userName) {
         Optional<Customer> customerResult = customerRepository.findByUserName(userName);
         if (customerResult.isEmpty()) {
-            throw new CustomerNotPresentException();
+            throw new DataNotFoundException(CUSTOMER_NOT_IN_TABLE,CUSTOMER_NOT_IN_TABLE_DESCRIPTION);
         }
-        return customerSecurityQuestionValidation(customerResult);
+        return customerSecurityQuestionValidation(customerResult.get());
     }
-    private List<CustomerSecurityQuestionsDto> customerSecurityQuestionValidation(Optional<Customer> customerResult) {
-        List<CustomerSecurityQuestions> customerSecurityQuestionsList = customerResult.get().getQuestionsList();
-        if (customerSecurityQuestionsList.isEmpty()) {
-            throw new CustomerSecurityQuestionNotFountException();
+    private List<CustomerSecurityQuestionsDto> customerSecurityQuestionValidation(Customer customerResult) {
+        List<CustomerSecurityQuestions> customerSecurityQuestionsList = customerResult.getQuestionsList();
+        if (Objects.isNull(customerSecurityQuestionsList) || customerSecurityQuestionsList.isEmpty()) {
+            throw new DataNotFoundException(CUSTOMER_SECURITY_QUESTION_NOT_IN_TABLE,CUSTOMER_SECURITY_QUESTION_NOT_IN_TABLE_DESCRIPTION);
         }
         return customerSecurityQuestionsList.stream().map(CustomerSecurityQuestions::toDto).toList();
     }

@@ -1,6 +1,7 @@
 package com.mob.casestudy.digitalbanking.entity;
 
 import com.mob.casestudy.digitalbanking.compositekey.CustomerImage;
+import com.mob.casestudy.digitalbanking.dto.CustomerSecurityImagesDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -11,6 +12,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Setter
 @Builder
+@Getter
 public class CustomerSecurityImages {
 
     @EmbeddedId
@@ -27,6 +29,12 @@ public class CustomerSecurityImages {
     @OneToOne
     @MapsId("customerId")
     private Customer customer;
+
+    public CustomerSecurityImagesDto toDto(){
+        return new CustomerSecurityImagesDto(securityImages.getSecurityImageId()
+                ,securityImages.getSecurityImageName()
+                ,securityImageCaption,securityImages.getSecurityImageUrl());
+    }
 
 
 }

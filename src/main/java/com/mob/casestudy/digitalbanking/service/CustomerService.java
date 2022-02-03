@@ -18,6 +18,8 @@ import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.mob.casestudy.digitalbanking.errorcodes.CustomisedErrorCodesAndDescription.*;
+
 
 @Service
 public class CustomerService {
@@ -41,9 +43,6 @@ public class CustomerService {
         SecurityImages securityImages=SecurityImages.builder()
                 .securityImageName("DSLR").securityImageUrl("Google.com").build();
         securityImageRepository.save(securityImages);
-
-        customerRepository.save(customer);
-
         CustomerSecurityImages customerSecurityImages=CustomerSecurityImages.builder().customerImage(new CustomerImage()).createdOn("ToDay")
                 .securityImageCaption("Nothing").securityImages(securityImages).customer(customer).build();
         customerSecurityImageRepository.save(customerSecurityImages);
@@ -64,7 +63,7 @@ public class CustomerService {
     public Customer validateCustomer(String userName) {
         Optional<Customer> customerResultOptional = customerRepository.findByUserName(userName);
         if (!customerResultOptional.isPresent()) {
-            throw new UserNotFoundException();
+            throw new DataNotFoundException(USER_NOT_FOUND,USER_NOT_FOUND_DESCRIPTION);
         }
         return customerResultOptional.get();
     }
@@ -106,31 +105,34 @@ public class CustomerService {
     private Customer insertValuesToFields(Map<String, String> fields, String username) {
         Optional<Customer> customerResultOptional = customerRepository.findByUserName(username);
         if (customerResultOptional.isPresent()) {
-            fields.forEach((key, vaue) -> {
+            Customer customer = customerResultOptional.get();
+            fields.forEach((key, value) -> {
                 Field field = ReflectionUtils.findField(Customer.class, key);
-                field.setAccessible(true);
+                assert field != null;
+                field.trySetAccessible();
                 if ((key).contains("status")) {
-                    ReflectionUtils.setField(field, customerResultOptional.get(), CustomerStatus.valueOf(vaue));
+                    ReflectionUtils.setField(field, customer, CustomerStatus.valueOf(value));
                 } else
-                    ReflectionUtils.setField(field, customerResultOptional.get(), vaue);
+                    ReflectionUtils.setField(field, customer, value);
             });
             return customerResultOptional.get();
         }
-        return customerResultOptional.get();
+        throw new DataNotFoundException(CUSTOMER_NOT_IN_TABLE,CUSTOMER_NOT_IN_TABLE_DESCRIPTION);
     }
-}
 
-    //TODO: handle the null check
-//    public Customer mapDtoToEntity(CustomerDto customerDto, Customer customerResult) {
-//        customerResult = customerResult.withFirstName(customerDto.getFirstName())
-//                .withLastName(customerDto.getLastName())
-//                .withPhoneNumber(customerDto.getPhoneNumber())
-//                .withEmail(customerDto.getEmail())
-//                .withPreferredLanguage(customerDto.getPreferredLanguage())
-//                .withStatus(CustomerStatus.valueOf(customerDto.getStatus()));
-//
-//        return customerResult;
-//    }
+
+   // TODO: handle the null check
+    public Customer mapDtoToEntity(CustomerDto customerDto, Customer customerResult) {
+        customerResult = customerResult.withFirstName(customerDto.getFirstName())
+                .withLastName(customerDto.getLastName())
+                .withPhoneNumber(customerDto.getPhoneNumber())
+                .withEmail(customerDto.getEmail())
+                .withPreferredLanguage(customerDto.getPreferredLanguage())
+                .withStatus(CustomerStatus.valueOf(customerDto.getStatus()));
+
+        return customerResult;
+    }
+        }
 
 
 

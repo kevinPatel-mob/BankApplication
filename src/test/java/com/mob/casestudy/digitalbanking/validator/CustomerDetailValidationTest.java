@@ -4,9 +4,7 @@ import com.mob.casestudy.digitalbanking.configuration.RegexValues;
 import com.mob.casestudy.digitalbanking.dto.CustomerDto;
 import com.mob.casestudy.digitalbanking.entity.Customer;
 import com.mob.casestudy.digitalbanking.enums.CustomerStatus;
-import com.mob.casestudy.digitalbanking.exceptionresponse.InvalidEmailException;
-import com.mob.casestudy.digitalbanking.exceptionresponse.InvalidLanguageException;
-import com.mob.casestudy.digitalbanking.exceptionresponse.InvalidPhoneNumberException;
+import com.mob.casestudy.digitalbanking.exceptionresponse.InvalidDataException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,7 +40,7 @@ class CustomerDetailValidationTest {
         Mockito.when(regexValues.getPhoneRegex()).thenReturn(value);
         String emailValue=  "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
         Mockito.when(regexValues.getEmailRegex()).thenReturn(emailValue);
-        Assertions.assertThrows(InvalidEmailException.class,
+        Assertions.assertThrows(InvalidDataException.class,
                 () -> customerDetailValidation.phoneEmailLanguageValidation(customerDto));
     }
 
@@ -59,7 +57,7 @@ class CustomerDetailValidationTest {
         CustomerDto customerDto = customer.toDto();
         String value="^\\d{10}$";
         Mockito.when(regexValues.getPhoneRegex()).thenReturn(value);
-        Assertions.assertThrows(InvalidPhoneNumberException.class,
+        Assertions.assertThrows(InvalidDataException.class,
                 () -> customerDetailValidation.phoneEmailLanguageValidation(customerDto));
     }
 
@@ -77,7 +75,7 @@ class CustomerDetailValidationTest {
         Mockito.when(regexValues.getPhoneRegex()).thenReturn(value);
         String emailValue=  "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
         Mockito.when(regexValues.getEmailRegex()).thenReturn(emailValue);
-        Assertions.assertThrows(InvalidLanguageException.class,
+        Assertions.assertThrows(InvalidDataException.class,
                 () -> customerDetailValidation.phoneEmailLanguageValidation(customerDto));
     }
 
