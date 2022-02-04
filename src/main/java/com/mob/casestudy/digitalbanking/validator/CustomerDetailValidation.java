@@ -4,6 +4,7 @@ import com.mob.casestudy.digitalbanking.configuration.RegexValues;
 import com.mob.casestudy.digitalbanking.dto.CustomerDto;
 import com.mob.casestudy.digitalbanking.enums.Language;
 import com.mob.casestudy.digitalbanking.exceptionresponse.InvalidDataException;
+import com.mob.casestudy.digitalbanking.requestbody.CustomerSecurityImageRequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +29,20 @@ public class CustomerDetailValidation {
             throw new InvalidDataException(INVALID_LANGUAGE_INPUT,INVALID_LANGUAGE_INPUT_DESCRIPTION);
         }
     }
+
+    public void validateCustomerImageCaption(CustomerSecurityImageRequestBody customerSecurityImageRequestBody){
+        String caption = customerSecurityImageRequestBody.getSecurityImageCaption();
+        String securityImageId = customerSecurityImageRequestBody.getSecurityImageId();
+        if (Objects.isNull(securityImageId) || securityImageId.isEmpty()){
+            throw new InvalidDataException(MANDATORY_FIELD_FOR_IMAGE,MANDATORY_FIELD_FOR_IMAGE_DESCRIPTION);
+        }
+        if (Objects.isNull(caption) || caption.isEmpty()) {
+            throw new InvalidDataException(MANDATORY_FIELD_FOR_IMAGE, MANDATORY_FIELD_FOR_IMAGE_DESCRIPTION);
+        }
+        if ( caption.length() <3) {
+                throw new InvalidDataException(CAPTION_SIZE, CAPTION_SIZE_DESCRIPTION);
+            }
+        }
 
     public boolean isEmailValid(String email) {
         return Objects.isNull(email) || email.isEmpty() || email.matches(regexValues.getEmailRegex());

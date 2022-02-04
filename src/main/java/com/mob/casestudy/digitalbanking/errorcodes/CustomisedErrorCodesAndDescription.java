@@ -1,8 +1,5 @@
 package com.mob.casestudy.digitalbanking.errorcodes;
 
-
-
-
 public class CustomisedErrorCodesAndDescription {
 
     private CustomisedErrorCodesAndDescription() {
@@ -34,6 +31,13 @@ public class CustomisedErrorCodesAndDescription {
 
     public static final String CUSTOMER_SECURITY_IMAGE_NOT_IN_TABLE="CSI-CREATE-FIE-003";
     public static final String CUSTOMER_SECURITY_IMAGE_NOT_IN_TABLE_DESCRIPTION="Customer Security IMAGE Should Present in Table";
+
+
+    public static final String CAPTION_SIZE="CSI-CREATE-FIE-002";
+    public static final String CAPTION_SIZE_DESCRIPTION="caption should contain three character";
+
+    public static final String MANDATORY_FIELD_FOR_IMAGE="CSI-CREATE-FIE-001";
+    public static final String MANDATORY_FIELD_FOR_IMAGE_DESCRIPTION="field should not be empty";
 
 
 

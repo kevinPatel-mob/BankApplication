@@ -40,11 +40,14 @@ public class CustomerService {
 
 
     public void saveCustomerSecurityImage(Customer customer){
-        SecurityImages securityImages=SecurityImages.builder()
+        SecurityImages securityImages1=SecurityImages.builder()
                 .securityImageName("DSLR").securityImageUrl("Google.com").build();
-        securityImageRepository.save(securityImages);
+        SecurityImages securityImages2=SecurityImages.builder()
+                .securityImageName("DSLR").securityImageUrl("Google.com").build();
+        securityImageRepository.save(securityImages1);
+        securityImageRepository.save(securityImages2);
         CustomerSecurityImages customerSecurityImages=CustomerSecurityImages.builder().customerImage(new CustomerImage()).createdOn("ToDay")
-                .securityImageCaption("Nothing").securityImages(securityImages).customer(customer).build();
+                .securityImageCaption("Nothing").securityImages(securityImages1).customer(customer).build();
         customerSecurityImageRepository.save(customerSecurityImages);
     }
 

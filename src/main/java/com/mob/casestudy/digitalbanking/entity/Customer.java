@@ -19,13 +19,11 @@ import java.util.List;
 @With
 @Getter
 public class Customer {
-
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
             name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-    )
+            strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "id", nullable = false, updatable = false, insertable = false)
     private String customerId;
     @Column
@@ -56,19 +54,15 @@ public class Customer {
     private String updatedBy;
     @Column
     private LocalDateTime updatedOn;
-
     @OneToOne(mappedBy = "customer")
     private CustomerOtp customerOtp;
     @OneToMany(mappedBy = "customer")
     private List<CustomerSecurityQuestions> questionsList=new ArrayList<>();
-
     public void addQuestionsList(CustomerSecurityQuestions questionsList) {
         this.questionsList.add(questionsList);
     }
-
     @OneToOne(mappedBy = "customer")
     private CustomerSecurityImages customerSecurityImages;
-
     public CustomerDto toDto(){
         return new CustomerDto(userName,firstName,lastName,phoneNumber,email,status.name(),preferredLanguage);
     }

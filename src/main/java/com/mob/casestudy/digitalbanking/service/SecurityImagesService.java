@@ -10,6 +10,7 @@ import com.mob.casestudy.digitalbanking.repository.CustomerRepository;
 import com.mob.casestudy.digitalbanking.repository.CustomerSecurityImageRepository;
 import com.mob.casestudy.digitalbanking.repository.SecurityImageRepository;
 import com.mob.casestudy.digitalbanking.requestbody.CustomerSecurityImageRequestBody;
+import com.mob.casestudy.digitalbanking.validator.CustomerDetailValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,47 +23,65 @@ import static com.mob.casestudy.digitalbanking.errorcodes.CustomisedErrorCodesAn
 @Service
 public class SecurityImagesService {
 
-    private CustomerRepository customerRepository;
+    private final CustomerRepository customerRepository;
     private final CustomerSecurityImageRepository customerSecurityImageRepository;
     private final SecurityImageRepository securityImageRepository;
     private final EntityManager entityManager;
+    private final CustomerDetailValidation customerDetailValidation;
     @Autowired
-    public SecurityImagesService(CustomerRepository customerRepository, CustomerSecurityImageRepository customerSecurityImageRepository, SecurityImageRepository securityImageRepository, EntityManager entityManager) {
+    public SecurityImagesService(CustomerRepository customerRepository, CustomerSecurityImageRepository customerSecurityImageRepository, SecurityImageRepository securityImageRepository, EntityManager entityManager, CustomerDetailValidation customerDetailValidation) {
         this.customerRepository = customerRepository;
         this.customerSecurityImageRepository = customerSecurityImageRepository;
         this.securityImageRepository = securityImageRepository;
         this.entityManager = entityManager;
+        this.customerDetailValidation = customerDetailValidation;
     }
 
     public CustomerSecurityImagesDto getSecurityImages(String userName){
         Optional<Customer> customerResultOptional = customerRepository.findByUserName(userName);
-        if (!customerResultOptional.isPresent()) {
+        if (customerResultOptional.isEmpty()) {
             throw new DataNotFoundException(USER_NOT_FOUND,USER_NOT_FOUND_DESCRIPTION);
         }
         Customer customer = customerResultOptional.get();
         return customer.getCustomerSecurityImages().toDto();
     }
 
-
-    @Transactional
-    public void updateCustomerSecurityImage(String userName,CustomerSecurityImageRequestBody customerSecurityImageRequestBody) {
+    public Customer findCustomerByName(String userName){
         Optional<Customer> customerResultOptional = customerRepository.findByUserName(userName);
-        if (!customerResultOptional.isPresent()) {
-            throw new DataNotFoundException(USER_NOT_FOUND,USER_NOT_FOUND_DESCRIPTION);
+        if (customerResultOptional.isEmpty()) {
+            throw new DataNotFoundException(CUSTOMER_NOT_IN_TABLE,CUSTOMER_NOT_IN_TABLE_DESCRIPTION);
         }
-        Customer customer = customerResultOptional.get();
-        String securityImageId = customer.getCustomerSecurityImages().getSecurityImages().getSecurityImageId();
-        String securityImageCaption = customerSecurityImageRequestBody.getSecurityImageCaption();
-        Optional<SecurityImages> imageResult = securityImageRepository.findById(securityImageId);
+        return customerResultOptional.get();
+    }
+
+    public void getCustomerSecurityImageAndDelete(Customer customer){
+        CustomerSecurityImages customerSecurityImages1 = customer.getCustomerSecurityImages();
+        customerSecurityImageRepository.delete(customerSecurityImages1);
+        customerSecurityImageRepository.flush();
+        entityManager.clear();
+    }
+    public SecurityImages findSecurityImageByIdFromRequestBody(CustomerSecurityImageRequestBody customerSecurityImageRequestBody){
+        Optional<SecurityImages> imageResult = securityImageRepository.findById(customerSecurityImageRequestBody.getSecurityImageId());
         if (imageResult.isEmpty()){
             throw new DataNotFoundException(CUSTOMER_SECURITY_IMAGE_NOT_IN_TABLE,CUSTOMER_SECURITY_IMAGE_NOT_IN_TABLE_DESCRIPTION);
         }
-        customerSecurityImageRepository.deleteCustomerSecurityImagesBySecurityImages_SecurityImageId(securityImageId);
-        entityManager.flush();
-        entityManager.clear();
+        return imageResult.get();
+    }
+    @Transactional
+    public void validateCustomerSecurityImageAndUpdate(String userName, CustomerSecurityImageRequestBody customerSecurityImageRequestBody) {
+        customerDetailValidation.validateCustomerImageCaption(customerSecurityImageRequestBody);
+        Customer customer = findCustomerByName(userName);
+        getCustomerSecurityImageAndDelete(customer);
+        SecurityImages securityImageResult = findSecurityImageByIdFromRequestBody(customerSecurityImageRequestBody);
+        updateCustomerSecurityImage(securityImageResult,customerSecurityImageRequestBody,customer);
+    }
 
-        CustomerSecurityImages customerSecurityImages = CustomerSecurityImages.builder().customerImage(new CustomerImage()).customer(customer)
-                .securityImages(imageResult.get()).securityImageCaption(securityImageCaption).build();
+    public void updateCustomerSecurityImage(SecurityImages securityImageResult, CustomerSecurityImageRequestBody customerSecurityImageRequestBody, Customer customer){
+        String securityImageCaption = customerSecurityImageRequestBody.getSecurityImageCaption();
+        CustomerSecurityImages customerSecurityImages = CustomerSecurityImages.builder().customerImage(new CustomerImage())
+                .customer(customer)
+                .securityImages(securityImageResult)
+                .securityImageCaption(securityImageCaption).build();
         customerSecurityImageRepository.save(customerSecurityImages);
     }
 }

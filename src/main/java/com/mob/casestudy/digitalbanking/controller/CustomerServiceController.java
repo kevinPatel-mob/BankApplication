@@ -86,8 +86,9 @@ public class CustomerServiceController {
     }
 
     @PutMapping(path = "/client-api/v1/customers/{username}/securityImages",produces = "application/json")
-    public void updateCustomerSecurityImage(@PathVariable String username, @RequestBody CustomerSecurityImageRequestBody customerSecurityImageRequestBody){
-        securityImagesService.updateCustomerSecurityImage(username,customerSecurityImageRequestBody);
+    public ResponseEntity<String> updateCustomerSecurityImage(@PathVariable String username, @RequestBody CustomerSecurityImageRequestBody customerSecurityImageRequestBody){
+        securityImagesService.validateCustomerSecurityImageAndUpdate(username,customerSecurityImageRequestBody);
+        return new ResponseEntity<>("Customer Image Updated :" + username, HttpStatus.OK);
     }
 
 }
