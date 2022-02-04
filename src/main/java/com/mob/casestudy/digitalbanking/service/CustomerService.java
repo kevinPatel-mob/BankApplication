@@ -34,23 +34,22 @@ public class CustomerService {
         this.securityImageRepository = securityImageRepository;
         this.customerSecurityImageRepository = customerSecurityImageRepository;
     }
+
     public void saveCustomer(Customer customer) {
         customerRepository.save(customer);
     }
 
-
-    public void saveCustomerSecurityImage(Customer customer){
-        SecurityImages securityImages1=SecurityImages.builder()
+    public void saveCustomerSecurityImage(Customer customer) {
+        SecurityImages securityImages1 = SecurityImages.builder()
                 .securityImageName("DSLR").securityImageUrl("Google.com").build();
-        SecurityImages securityImages2=SecurityImages.builder()
+        SecurityImages securityImages2 = SecurityImages.builder()
                 .securityImageName("DSLR").securityImageUrl("Google.com").build();
         securityImageRepository.save(securityImages1);
         securityImageRepository.save(securityImages2);
-        CustomerSecurityImages customerSecurityImages=CustomerSecurityImages.builder().customerImage(new CustomerImage()).createdOn("ToDay")
+        CustomerSecurityImages customerSecurityImages = CustomerSecurityImages.builder().customerImage(new CustomerImage()).createdOn("ToDay")
                 .securityImageCaption("Nothing").securityImages(securityImages1).customer(customer).build();
         customerSecurityImageRepository.save(customerSecurityImages);
     }
-
 
     public void updateCustomer(String userName, CustomerDto customerDto) {
         Customer customer = validateUserNameAndReturnCustomer(userName, customerDto);
@@ -62,47 +61,46 @@ public class CustomerService {
         return validateFieldAndPassToDto(customerDto, customerResult);
     }
 
-
     public Customer validateCustomer(String userName) {
         Optional<Customer> customerResultOptional = customerRepository.findByUserName(userName);
         if (!customerResultOptional.isPresent()) {
-            throw new DataNotFoundException(USER_NOT_FOUND,USER_NOT_FOUND_DESCRIPTION);
+            throw new DataNotFoundException(USER_NOT_FOUND, USER_NOT_FOUND_DESCRIPTION);
         }
         return customerResultOptional.get();
     }
 
-    public Customer validateFieldAndPassToDto(CustomerDto customerDto , Customer customerResult){
+    public Customer validateFieldAndPassToDto(CustomerDto customerDto, Customer customerResult) {
         customerDetailValidation.
                 phoneEmailLanguageValidation(customerDto);
-        if (!customerDto.getFirstName().isEmpty()){
+        if (!customerDto.getFirstName().isEmpty()) {
             customerResult.setFirstName(customerDto.getFirstName());
         }
-        if (!customerDto.getLastName().isEmpty()){
+        if (!customerDto.getLastName().isEmpty()) {
             customerResult.setLastName(customerDto.getLastName());
         }
-        if (!customerDto.getPhoneNumber().isEmpty()){
+        if (!customerDto.getPhoneNumber().isEmpty()) {
             customerResult.setPhoneNumber(customerDto.getPhoneNumber());
         }
-        if (!customerDto.getEmail().isEmpty()){
+        if (!customerDto.getEmail().isEmpty()) {
             customerResult.setEmail(customerDto.getEmail());
         }
-        if (!customerDto.getPreferredLanguage().isEmpty()){
+        if (!customerDto.getPreferredLanguage().isEmpty()) {
             customerResult.setPreferredLanguage(customerDto.getPreferredLanguage());
         }
-        if (!customerDto.getStatus().isEmpty()){
+        if (!customerDto.getStatus().isEmpty()) {
             customerResult.setStatus(CustomerStatus.valueOf(customerDto.getStatus()));
         }
         return customerResult;
     }
 
     public void updateCustomerDemo(String username, CustomerDto customerDto) {
-            customerRepository.save(validateAndMapToCustomer(customerDto,username));
-        }
+        customerRepository.save(validateAndMapToCustomer(customerDto, username));
+    }
 
-    public Customer validateAndMapToCustomer(CustomerDto customerDto, String username ){
+    public Customer validateAndMapToCustomer(CustomerDto customerDto, String username) {
         customerDetailValidation.
                 phoneEmailLanguageValidation(customerDto);
-                return insertValuesToFields(customerDto.toMap(),username);
+        return insertValuesToFields(customerDto.toMap(), username);
     }
 
     private Customer insertValuesToFields(Map<String, String> fields, String username) {
@@ -120,11 +118,10 @@ public class CustomerService {
             });
             return customerResultOptional.get();
         }
-        throw new DataNotFoundException(CUSTOMER_NOT_IN_TABLE,CUSTOMER_NOT_IN_TABLE_DESCRIPTION);
+        throw new DataNotFoundException(CUSTOMER_NOT_IN_TABLE, CUSTOMER_NOT_IN_TABLE_DESCRIPTION);
     }
 
-
-   // TODO: handle the null check
+    // TODO: handle the null check
     public Customer mapDtoToEntity(CustomerDto customerDto, Customer customerResult) {
         customerResult = customerResult.withFirstName(customerDto.getFirstName())
                 .withLastName(customerDto.getLastName())
@@ -135,7 +132,7 @@ public class CustomerService {
 
         return customerResult;
     }
-        }
+}
 
 
 

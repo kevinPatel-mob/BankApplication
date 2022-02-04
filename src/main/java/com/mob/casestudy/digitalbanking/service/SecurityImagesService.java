@@ -28,6 +28,7 @@ public class SecurityImagesService {
     private final SecurityImageRepository securityImageRepository;
     private final EntityManager entityManager;
     private final CustomerDetailValidation customerDetailValidation;
+
     @Autowired
     public SecurityImagesService(CustomerRepository customerRepository, CustomerSecurityImageRepository customerSecurityImageRepository, SecurityImageRepository securityImageRepository, EntityManager entityManager, CustomerDetailValidation customerDetailValidation) {
         this.customerRepository = customerRepository;
@@ -37,46 +38,48 @@ public class SecurityImagesService {
         this.customerDetailValidation = customerDetailValidation;
     }
 
-    public CustomerSecurityImagesDto getSecurityImages(String userName){
+    public CustomerSecurityImagesDto getSecurityImages(String userName) {
         Optional<Customer> customerResultOptional = customerRepository.findByUserName(userName);
         if (customerResultOptional.isEmpty()) {
-            throw new DataNotFoundException(USER_NOT_FOUND,USER_NOT_FOUND_DESCRIPTION);
+            throw new DataNotFoundException(USER_NOT_FOUND, USER_NOT_FOUND_DESCRIPTION);
         }
         Customer customer = customerResultOptional.get();
         return customer.getCustomerSecurityImages().toDto();
     }
 
-    public Customer findCustomerByName(String userName){
+    public Customer findCustomerByName(String userName) {
         Optional<Customer> customerResultOptional = customerRepository.findByUserName(userName);
         if (customerResultOptional.isEmpty()) {
-            throw new DataNotFoundException(CUSTOMER_NOT_IN_TABLE,CUSTOMER_NOT_IN_TABLE_DESCRIPTION);
+            throw new DataNotFoundException(CUSTOMER_NOT_IN_TABLE, CUSTOMER_NOT_IN_TABLE_DESCRIPTION);
         }
         return customerResultOptional.get();
     }
 
-    public void getCustomerSecurityImageAndDelete(Customer customer){
+    public void getCustomerSecurityImageAndDelete(Customer customer) {
         CustomerSecurityImages customerSecurityImages1 = customer.getCustomerSecurityImages();
         customerSecurityImageRepository.delete(customerSecurityImages1);
         customerSecurityImageRepository.flush();
         entityManager.clear();
     }
-    public SecurityImages findSecurityImageByIdFromRequestBody(CustomerSecurityImageRequestBody customerSecurityImageRequestBody){
+
+    public SecurityImages findSecurityImageByIdFromRequestBody(CustomerSecurityImageRequestBody customerSecurityImageRequestBody) {
         Optional<SecurityImages> imageResult = securityImageRepository.findById(customerSecurityImageRequestBody.getSecurityImageId());
-        if (imageResult.isEmpty()){
-            throw new DataNotFoundException(CUSTOMER_SECURITY_IMAGE_NOT_IN_TABLE,CUSTOMER_SECURITY_IMAGE_NOT_IN_TABLE_DESCRIPTION);
+        if (imageResult.isEmpty()) {
+            throw new DataNotFoundException(CUSTOMER_SECURITY_IMAGE_NOT_IN_TABLE, CUSTOMER_SECURITY_IMAGE_NOT_IN_TABLE_DESCRIPTION);
         }
         return imageResult.get();
     }
+
     @Transactional
     public void validateCustomerSecurityImageAndUpdate(String userName, CustomerSecurityImageRequestBody customerSecurityImageRequestBody) {
         customerDetailValidation.validateCustomerImageCaption(customerSecurityImageRequestBody);
         Customer customer = findCustomerByName(userName);
         getCustomerSecurityImageAndDelete(customer);
         SecurityImages securityImageResult = findSecurityImageByIdFromRequestBody(customerSecurityImageRequestBody);
-        updateCustomerSecurityImage(securityImageResult,customerSecurityImageRequestBody,customer);
+        updateCustomerSecurityImage(securityImageResult, customerSecurityImageRequestBody, customer);
     }
 
-    public void updateCustomerSecurityImage(SecurityImages securityImageResult, CustomerSecurityImageRequestBody customerSecurityImageRequestBody, Customer customer){
+    public void updateCustomerSecurityImage(SecurityImages securityImageResult,CustomerSecurityImageRequestBody customerSecurityImageRequestBody,Customer customer) {
         String securityImageCaption = customerSecurityImageRequestBody.getSecurityImageCaption();
         CustomerSecurityImages customerSecurityImages = CustomerSecurityImages.builder().customerImage(new CustomerImage())
                 .customer(customer)

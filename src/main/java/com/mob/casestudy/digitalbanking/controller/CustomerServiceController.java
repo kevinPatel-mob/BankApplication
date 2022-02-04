@@ -16,8 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Optional;
+
 import static com.mob.casestudy.digitalbanking.errorcodes.CustomisedErrorCodesAndDescription.USER_NOT_FOUND;
 import static com.mob.casestudy.digitalbanking.errorcodes.CustomisedErrorCodesAndDescription.USER_NOT_FOUND_DESCRIPTION;
 
@@ -53,7 +55,7 @@ public class CustomerServiceController {
             CustomerDto customerDto = customerResult.get().toDto();
             return ResponseEntity.status(HttpStatus.OK).body(customerDto);
         } else {
-            throw new DataNotFoundException(USER_NOT_FOUND,USER_NOT_FOUND_DESCRIPTION);
+            throw new DataNotFoundException(USER_NOT_FOUND, USER_NOT_FOUND_DESCRIPTION);
         }
     }
 
@@ -68,26 +70,28 @@ public class CustomerServiceController {
         customerService.updateCustomerDemo(username, customerDto);
         return new ResponseEntity<>("User Updated:" + username, HttpStatus.OK);
     }
+
     @GetMapping(path = "/client-api/v1/securityQuestions", produces = "application/json")
     public ResponseEntity<Object> getAllSecurityQuestions() {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new GetAllSecurityQuestionDto(securityQuestionsService.retrieveAllQuestions()));
     }
+
     @GetMapping(path = "/client-api/v1/customers/{username}/securityQuestions", produces = "application/json")
     public ResponseEntity<Object> getCustomerSecurityQuestions(@PathVariable String username) {
-        return  ResponseEntity.status(HttpStatus.OK).body(new GetCustomerSecurityQuestionsResponse(securityQuestionsService.
-                        getSecurityQuestionAndAnswer(username)));
+        return ResponseEntity.status(HttpStatus.OK).body(new GetCustomerSecurityQuestionsResponse(securityQuestionsService.
+                getSecurityQuestionAndAnswer(username)));
     }
 
-    @GetMapping(path = "/client-api/v1/customers/{username}/securityImages",produces = "application/json")
-    public ResponseEntity<CustomerSecurityImagesDto> retrieveCustomerSecurityImages(@PathVariable String username){
+    @GetMapping(path = "/client-api/v1/customers/{username}/securityImages", produces = "application/json")
+    public ResponseEntity<CustomerSecurityImagesDto> retrieveCustomerSecurityImages(@PathVariable String username) {
         CustomerSecurityImagesDto customerSecurityImagesDto = securityImagesService.getSecurityImages(username);
         return ResponseEntity.status(HttpStatus.OK).body(customerSecurityImagesDto);
     }
 
-    @PutMapping(path = "/client-api/v1/customers/{username}/securityImages",produces = "application/json")
-    public ResponseEntity<String> updateCustomerSecurityImage(@PathVariable String username, @RequestBody CustomerSecurityImageRequestBody customerSecurityImageRequestBody){
-        securityImagesService.validateCustomerSecurityImageAndUpdate(username,customerSecurityImageRequestBody);
+    @PutMapping(path = "/client-api/v1/customers/{username}/securityImages", produces = "application/json")
+    public ResponseEntity<String> updateCustomerSecurityImage(@PathVariable String username, @RequestBody CustomerSecurityImageRequestBody customerSecurityImageRequestBody) {
+        securityImagesService.validateCustomerSecurityImageAndUpdate(username, customerSecurityImageRequestBody);
         return new ResponseEntity<>("Customer Image Updated :" + username, HttpStatus.OK);
     }
 
