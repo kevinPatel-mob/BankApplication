@@ -68,6 +68,13 @@ public class CustomerService {
         }
         return customerResultOptional.get();
     }
+    public Customer findCustomerByName(String userName) {
+        Optional<Customer> customerResultOptional = customerRepository.findByUserName(userName);
+        if (customerResultOptional.isEmpty()) {
+            throw new DataNotFoundException(CUSTOMER_NOT_IN_TABLE, CUSTOMER_NOT_IN_TABLE_DESCRIPTION);
+        }
+        return customerResultOptional.get();
+    }
 
     public Customer validateFieldAndPassToDto(CustomerDto customerDto, Customer customerResult) {
         customerDetailValidation.

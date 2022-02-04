@@ -33,23 +33,24 @@ public class CustomerDetailValidation {
     public void validateCustomerImageCaption(CustomerSecurityImageRequestBody customerSecurityImageRequestBody){
         String caption = customerSecurityImageRequestBody.getSecurityImageCaption();
         String securityImageId = customerSecurityImageRequestBody.getSecurityImageId();
-        if (Objects.isNull(securityImageId) || securityImageId.isEmpty()){
+        if (isNullOrEmpty(securityImageId) || isNullOrEmpty(caption)){
             throw new InvalidDataException(MANDATORY_FIELD_FOR_IMAGE,MANDATORY_FIELD_FOR_IMAGE_DESCRIPTION);
-        }
-        if (Objects.isNull(caption) || caption.isEmpty()) {
-            throw new InvalidDataException(MANDATORY_FIELD_FOR_IMAGE, MANDATORY_FIELD_FOR_IMAGE_DESCRIPTION);
         }
         if ( caption.length() <3) {
                 throw new InvalidDataException(CAPTION_SIZE, CAPTION_SIZE_DESCRIPTION);
             }
         }
 
+        public boolean isNullOrEmpty(String value){
+        return Objects.isNull(value) || value.isEmpty();
+    }
+
     public boolean isEmailValid(String email) {
-        return Objects.isNull(email) || email.isEmpty() || email.matches(regexValues.getEmailRegex());
+        return isNullOrEmpty(email) || email.matches(regexValues.getEmailRegex());
     }
 
     public boolean isPhoneValid(String number) {
-        return number == null || number.isEmpty() || number.matches(regexValues.getPhoneRegex());
+        return isNullOrEmpty(number) || number.matches(regexValues.getPhoneRegex());
     }
 
     public boolean isLanguageValid(String language) {

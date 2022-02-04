@@ -11,4 +11,5 @@ public interface CustomerSecurityImageRepository extends JpaRepository<CustomerS
 
 
     void deleteCustomerSecurityImagesBySecurityImagesSecurityImageId(String securityImageId);
+
 }
