@@ -12,7 +12,6 @@ import com.mob.casestudy.digitalbanking.requestbody.CustomerSecurityImageRequest
 import com.mob.casestudy.digitalbanking.validator.CustomerDetailValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -52,16 +51,18 @@ public class SecurityImagesService {
         }
         return imageResult.get();
     }
+
     public void validateCustomerSecurityImageAndUpdate(String userName, CustomerSecurityImageRequestBody customerSecurityImageRequestBody) {
         customerDetailValidation.validateCustomerImageCaption(customerSecurityImageRequestBody);
         Customer customer = customerService.findCustomerByName(userName);
-        customerImagesService.getCustomerSecurityImageAndDelete(customer);
+        customerImagesService.deleteCustomerSecurityImage(customer);
         SecurityImages securityImageResult = findSecurityImageByIdFromRequestBody(customerSecurityImageRequestBody);
         updateCustomerSecurityImage(securityImageResult, customerSecurityImageRequestBody, customer);
     }
-    public void updateCustomerSecurityImage(SecurityImages securityImageResult,CustomerSecurityImageRequestBody customerSecurityImageRequestBody,Customer customer) {
+
+    public void updateCustomerSecurityImage(SecurityImages securityImageResult, CustomerSecurityImageRequestBody customerSecurityImageRequestBody, Customer customer) {
         String securityImageCaption = customerSecurityImageRequestBody.getSecurityImageCaption();
-        customerImagesService.saveCustomerAndImageCaption(setCustomerSecurityImages(customer,securityImageResult,securityImageCaption));
+        customerImagesService.saveCustomerAndImageCaption(setCustomerSecurityImages(customer, securityImageResult, securityImageCaption));
     }
 
     private CustomerSecurityImages setCustomerSecurityImages(Customer customer, SecurityImages securityImageResult, String securityImageCaption) {

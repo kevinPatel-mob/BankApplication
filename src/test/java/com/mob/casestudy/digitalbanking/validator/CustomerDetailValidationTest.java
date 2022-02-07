@@ -5,6 +5,7 @@ import com.mob.casestudy.digitalbanking.dto.CustomerDto;
 import com.mob.casestudy.digitalbanking.entity.Customer;
 import com.mob.casestudy.digitalbanking.enums.CustomerStatus;
 import com.mob.casestudy.digitalbanking.exceptionresponse.InvalidDataException;
+import com.mob.casestudy.digitalbanking.requestbody.CustomerSecurityImageRequestBody;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -125,4 +126,27 @@ class CustomerDetailValidationTest {
         String language = "EN";
         Assertions.assertTrue(customerDetailValidation.isLanguageValid(language));
     }
+
+    @Test
+    void validateCustomerImageCaption_When_ImageID_Is_Null_Throw_InvalidDataException() {
+        CustomerSecurityImageRequestBody customer=CustomerSecurityImageRequestBody.builder().securityImageCaption("testing")
+                .securityImageId(null).build();
+        Assertions.assertThrows(InvalidDataException.class,
+                ()->customerDetailValidation.validateCustomerImageCaption(customer));
+    }
+    @Test
+    void validateCustomerImageCaption_When_ImageCaption_Is_Null_Throw_InvalidDataException() {
+        CustomerSecurityImageRequestBody customer=CustomerSecurityImageRequestBody.builder().securityImageCaption(null)
+                .securityImageId("null").build();
+        Assertions.assertThrows(InvalidDataException.class,
+                ()->customerDetailValidation.validateCustomerImageCaption(customer));
+    }
+    @Test
+    void validateCustomerImageCaption_When_ImageCaption_Is_Less_Then_3Character_Null_Throw_InvalidDataException() {
+        CustomerSecurityImageRequestBody customer=CustomerSecurityImageRequestBody.builder().securityImageCaption("ke")
+                .securityImageId("null").build();
+        Assertions.assertThrows(InvalidDataException.class,
+                ()->customerDetailValidation.validateCustomerImageCaption(customer));
+    }
+
 }

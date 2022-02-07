@@ -18,30 +18,31 @@ import static com.mob.casestudy.digitalbanking.errorcodes.CustomisedErrorCodesAn
 public class CustomerDetailValidation {
     @Autowired
     RegexValues regexValues;
+
     public void phoneEmailLanguageValidation(CustomerDto customerDto) {
         if (!isPhoneValid(customerDto.getPhoneNumber())) {
-            throw new InvalidDataException(INVALID_PHONE_NUMBER,INVALID_PHONE_NUMBER_DESCRIPTION);
+            throw new InvalidDataException(INVALID_PHONE_NUMBER, INVALID_PHONE_NUMBER_DESCRIPTION);
         }
         if (!isEmailValid(customerDto.getEmail())) {
-            throw new InvalidDataException(INVALID_EMAIL,INVALID_EMAIL_DESCRIPTION);
+            throw new InvalidDataException(INVALID_EMAIL, INVALID_EMAIL_DESCRIPTION);
         }
         if (customerDto.getPreferredLanguage() != null && !isLanguageValid(customerDto.getPreferredLanguage())) {
-            throw new InvalidDataException(INVALID_LANGUAGE_INPUT,INVALID_LANGUAGE_INPUT_DESCRIPTION);
+            throw new InvalidDataException(INVALID_LANGUAGE_INPUT, INVALID_LANGUAGE_INPUT_DESCRIPTION);
         }
     }
 
-    public void validateCustomerImageCaption(CustomerSecurityImageRequestBody customerSecurityImageRequestBody){
+    public void validateCustomerImageCaption(CustomerSecurityImageRequestBody customerSecurityImageRequestBody) {
         String caption = customerSecurityImageRequestBody.getSecurityImageCaption();
         String securityImageId = customerSecurityImageRequestBody.getSecurityImageId();
-        if (isNullOrEmpty(securityImageId) || isNullOrEmpty(caption)){
-            throw new InvalidDataException(MANDATORY_FIELD_FOR_IMAGE,MANDATORY_FIELD_FOR_IMAGE_DESCRIPTION);
+        if (isNullOrEmpty(securityImageId) || isNullOrEmpty(caption)) {
+            throw new InvalidDataException(MANDATORY_FIELD_FOR_IMAGE, MANDATORY_FIELD_FOR_IMAGE_DESCRIPTION);
         }
-        if ( caption.length() <3) {
-                throw new InvalidDataException(CAPTION_SIZE, CAPTION_SIZE_DESCRIPTION);
-            }
+        if (caption.length() < 3) {
+            throw new InvalidDataException(CAPTION_SIZE, CAPTION_SIZE_DESCRIPTION);
         }
+    }
 
-        public boolean isNullOrEmpty(String value){
+    public boolean isNullOrEmpty(String value) {
         return Objects.isNull(value) || value.isEmpty();
     }
 

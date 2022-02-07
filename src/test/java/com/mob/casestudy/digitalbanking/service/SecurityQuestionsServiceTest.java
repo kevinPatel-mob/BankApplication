@@ -10,6 +10,7 @@ import com.mob.casestudy.digitalbanking.enums.CustomerStatus;
 import com.mob.casestudy.digitalbanking.enums.Language;
 import com.mob.casestudy.digitalbanking.exceptionresponse.DataNotFoundException;
 import com.mob.casestudy.digitalbanking.repository.CustomerRepository;
+import com.mob.casestudy.digitalbanking.repository.CustomerSecurityQuestionRepository;
 import com.mob.casestudy.digitalbanking.repository.SecurityQuestionsRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -33,6 +34,8 @@ class SecurityQuestionsServiceTest {
     SecurityQuestionsRepository securityQuestionsRepository;
     @Mock
     CustomerRepository customerRepository;
+    @Mock
+    CustomerSecurityQuestionRepository customerSecurityQuestionRepository;
 
     @Test
     void retrieveAllQuestions_If_Questions_Empty_Throw_QuestionEmptyException() {
@@ -110,4 +113,15 @@ class SecurityQuestionsServiceTest {
         org.assertj.core.api.Assertions.assertThat(expected).usingRecursiveComparison().isEqualTo(actual);
     }
 
+    @Test
+    void addCustomerQuestionAnswer() {
+        Customer customer = Customer.builder().userName("kep")
+                .firstName("kevin").lastName("patel")
+                .phoneNumber("9664847593").email("kevinpatel1142@gmail.com")
+                .status(CustomerStatus.ACTIVE).preferredLanguage(Language.EN.toString())
+                .externalId("1").createdBy("self").createdOn(LocalDateTime.now())
+                .updatedBy("k-win").updatedOn(LocalDateTime.now()).questionsList(new ArrayList<>()).build();
+        securityQuestionsService.addCustomerQuestionAnswer(customer);
+        Mockito.verify(customerSecurityQuestionRepository, Mockito.times(3)).save(Mockito.any());
+    }
 }

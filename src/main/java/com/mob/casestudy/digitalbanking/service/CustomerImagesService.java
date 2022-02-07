@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 
 @Service
+
 public class CustomerImagesService {
 
     private final CustomerSecurityImageRepository customerSecurityImageRepository;
@@ -22,7 +23,7 @@ public class CustomerImagesService {
     }
 
     @Transactional
-    public void getCustomerSecurityImageAndDelete(Customer customer) {
+    public void deleteCustomerSecurityImage(Customer customer) {
         customerSecurityImageRepository.delete(customer.getCustomerSecurityImages());
         customerSecurityImageRepository.flush();
         entityManager.clear();
